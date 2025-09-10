@@ -3,9 +3,9 @@ import Projects from "@/components/Projects";
 
 export default function Home() {
   return (
-    <main>
+    <div className="flex flex-col gap-16 p-8">
       <Hero />
       <Projects />
-    </main>
+    </div>
   );
 }

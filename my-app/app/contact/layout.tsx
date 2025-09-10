@@ -1,19 +1,9 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import "../globals.css";
 
-export default function RootLayout({
+export default function ContactLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="nl">
-      <body className="bg-gray-50">
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
-  );
+  // Enkel de children renderen, geen Footer of Navbar hier
+  return <div className="flex-1">{children}</div>;
 }

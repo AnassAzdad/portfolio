@@ -29,4 +29,10 @@ export default function Projects() {
       </div>
     </main>
   );
+  <body className="flex flex-col min-h-screen">
+  <Navbar />
+  <main className="flex-1">{children}</main>
+  <Footer />
+</body>
+
 }

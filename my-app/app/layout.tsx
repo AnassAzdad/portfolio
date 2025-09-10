@@ -1,32 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// app/layout.tsx
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
+export const metadata = {
   title: "Mijn Portfolio",
-  description: "Portfolio website voor stage",
+  description: "Persoonlijke portfolio website",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="nl">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="flex flex-col min-h-screen bg-gray-900 text-cyan-400 font-sans">
+        {/* Navbar */}
         <Navbar />
-        {children}
+
+        {/* Main content */}
+        <main className="flex-1">
+          {children}
+        </main>
+
+        {/* Footer */}
         <Footer />
       </body>
     </html>
