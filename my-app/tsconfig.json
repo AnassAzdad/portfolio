@@ -22,11 +22,10 @@
         "name": "next"
       }
     ],
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+   "paths": {
+  "@/*": ["app/*"]
+}
+
   },
   "include": [
     "next-env.d.ts",
