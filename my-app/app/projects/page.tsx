@@ -1,23 +1,32 @@
-import ProjectCard from "../../components/ProjectCard";
+import ProjectCard from "@/components/ProjectCard";
 
 const projects = [
   {
-    title: "Portfolio Website",
-    description: "Mijn persoonlijke portfolio gebouwd met Next.js en Tailwind CSS.",
-    link: "#",
+    title: "To-Do App",
+    description: "Een simpele takenlijst waarin je taken kan toevoegen en verwijderen.",
+    link: "https://github.com/jouwnaam/todo-app", 
   },
   {
-    title: "React ToDo App",
-    description: "Een eenvoudige ToDo applicatie in React.",
-    link: "#",
+    title: "Calculator",
+    description: "Een rekenmachine-app gebouwd met React en eenvoudige state-logica.",
+    link: "https://github.com/jouwnaam/calculator",
+  },
+  {
+    title: "Color Palette Generator",
+    description: "Een app die random kleuren genereert en kopieerbare hex-codes toont.",
+    link: "https://github.com/jouwnaam/color-palette-generator",
   },
 ];
 
+
+
 export default function Projects() {
   return (
-    <main className="min-h-screen p-8">
-      <h2 className="text-4xl font-bold text-center mb-8">Mijn Projecten</h2>
-      <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+    <section className="min-h-screen px-6 py-12">
+      <h2 className="text-4xl font-bold text-cyan-400 mb-12 text-center">
+        Mijn Projecten
+      </h2>
+      <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {projects.map((project, index) => (
           <ProjectCard
             key={index}
@@ -27,12 +36,6 @@ export default function Projects() {
           />
         ))}
       </div>
-    </main>
+    </section>
   );
-  <body className="flex flex-col min-h-screen">
-  <Navbar />
-  <main className="flex-1">{children}</main>
-  <Footer />
-</body>
-
 }

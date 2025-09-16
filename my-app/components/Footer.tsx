@@ -1,7 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="bg-cyan-800 text-white p-4 text-center">
-      &copy; {new Date().getFullYear()} Anass A.
+    <footer className="bg-gray-900 border-t border-gray-800 py-6 mt-12">
+      <div className="max-w-7xl mx-auto text-center text-sm text-gray-400">
+        © {new Date().getFullYear()} Anass Azdad. Alle rechten voorbehouden.
+      </div>
     </footer>
   );
 }
