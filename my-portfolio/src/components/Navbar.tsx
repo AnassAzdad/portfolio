@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext"; // ✅ import theme hook
+import { useTheme } from "../context/ThemeContext"; // 
 
 const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -19,7 +19,7 @@ const Header: React.FC = () => {
         boxShadow: "0 2px 6px rgba(0,0,0,0.6)",
       }}
     >
-      {/* Logo / Naam */}
+      
       <h1
         style={{
           color: theme === "dark" ? "#fff" : "#222",
@@ -75,7 +75,7 @@ const Header: React.FC = () => {
           ))}
         </ul>
 
-        {/* 🌙/☀️ Theme toggle button */}
+        
         <button
           onClick={toggleTheme}
           style={{

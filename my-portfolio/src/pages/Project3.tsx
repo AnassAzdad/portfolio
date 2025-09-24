@@ -3,7 +3,7 @@ import "./Project3.css";
 
 const FALLBACK_SYMBOLS = ["EUR", "USD", "MAD", "GBP", "JPY", "CAD"];
 
-// Kleine helper om bedrag veilig te parsen
+
 function parseAmount(input: string): number {
   if (input == null) return NaN;
   const normalized = String(input).trim().replace(",", ".");
@@ -24,7 +24,7 @@ function Project3() {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // ✅ Laad valutalijst via Frankfurter
+  
   useEffect(() => {
     (async () => {
       try {
@@ -37,7 +37,7 @@ function Project3() {
     })();
   }, []);
 
-  // ✅ Converteer automatisch bij wijzigingen
+  
   useEffect(() => {
     const amt = parseAmount(amountStr);
     if (!Number.isFinite(amt) || amt < 0) {
@@ -82,13 +82,13 @@ function Project3() {
     })();
   }, [amountStr, fromCurrency, toCurrency]);
 
-  // Wissel knop
+  
   const swapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
   };
 
-  // ✅ Meteoren achtergrond
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

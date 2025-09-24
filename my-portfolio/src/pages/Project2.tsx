@@ -17,7 +17,7 @@ function Project2() {
   const [error, setError] = useState("");
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const API_KEY = "0402f893d9e221b875a0033de355b8b4"; // jouw key
+  const API_KEY = "0402f893d9e221b875a0033de355b8b4"; 
 
   const handleSearch = async () => {
     if (!city.trim()) return;
@@ -27,7 +27,7 @@ function Project2() {
     setPlace(null);
 
     try {
-      // 🔹 Eerst Geocoding API → haalt juiste stad wereldwijd
+      
       const geoRes = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${API_KEY}`
       );
@@ -43,7 +43,7 @@ function Project2() {
       const { name, lat, lon, country, state } = geoData[0];
       setPlace({ name, country, state });
 
-      // 🔹 Daarna Weather API → lat/lon werkt altijd wereldwijd
+      
       const wxRes = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=nl`
       );
@@ -63,7 +63,7 @@ function Project2() {
     }
   };
 
-  // Meteors achtergrond
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

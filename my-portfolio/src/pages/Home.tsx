@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useTheme } from "../context/ThemeContext"; // ✅ Theme hook
+import { useTheme } from "../context/ThemeContext"; 
 
 const roles = ["Software Developer in opleiding", "Frontend Developer"];
 
 const Home: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { theme } = useTheme(); // ✅ huidige theme (dark / light)
+  const { theme } = useTheme(); 
   const [currentText, setCurrentText] = useState("");
   const [roleIndex, setRoleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
 
-  // Typwriter effect
+  
   useEffect(() => {
     const currentRole = roles[roleIndex];
     if (charIndex < currentRole.length) {
@@ -214,7 +214,7 @@ const Home: React.FC = () => {
           </a>
         </div>
 
-        {/* Project previews → linken naar /projects */}
+        
         <div
           style={{
             display: "grid",

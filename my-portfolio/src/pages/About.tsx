@@ -4,7 +4,7 @@ import "./About.css";
 function About() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Meteor achtergrond
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -105,7 +105,7 @@ function About() {
 
 
 
-      {/* Skills */}
+      
       <section className="about-section skills-section">
         <h2>⚡ Skills</h2>
         <div className="skills-row">

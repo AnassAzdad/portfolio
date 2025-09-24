@@ -16,7 +16,7 @@ function Project1() {
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
 
-  // 🔹 Vorige / volgende maand
+  
   const prevMonth = () => {
     if (currentMonth === 0) {
       setCurrentMonth(11);
@@ -35,22 +35,22 @@ function Project1() {
     }
   };
 
-  // 🔹 Event toevoegen
+  
   const handleAddEvent = (date: string) => {
     if (newEvent.trim() !== "") {
       const updatedEvents = [...events, { date, title: newEvent }];
       setEvents(updatedEvents);
 
-      // 📧 Verstuur email via EmailJS
+      
       emailjs
         .send(
-          "service_ammshpk", // <-- jouw service ID
-          "template_5w3hoi1", // <-- jouw template ID
+          "service_ammshpk", 
+          "template_5w3hoi1", 
           {
             date: date,
             event: newEvent,
           },
-          "kBJ0ovQsp0AOVFzz5" // <-- jouw public key
+          "kBJ0ovQsp0AOVFzz5" 
         )
         .then(
           () => {
@@ -66,12 +66,12 @@ function Project1() {
     }
   };
 
-  // 🔹 Event verwijderen
+  
   const handleDeleteEvent = (date: string, index: number) => {
     setEvents(events.filter((e, i) => !(e.date === date && i === index)));
   };
 
-  // 🔹 Datum selecteren / deselecteren
+  
   const toggleDateSelection = (dateString: string) => {
     if (selectedDates.includes(dateString)) {
       setSelectedDates(selectedDates.filter((d) => d !== dateString));
@@ -80,7 +80,7 @@ function Project1() {
     }
   };
 
-  // 🔹 Render days
+  
   const renderDays = () => {
     const days = [];
     for (let i = 0; i < firstDay; i++) {
@@ -118,7 +118,7 @@ function Project1() {
     return days;
   };
 
-  // 🔹 Meteor achtergrond
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

@@ -5,7 +5,7 @@ function Projects() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { theme } = useTheme();
 
-  // Meteor achtergrond
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

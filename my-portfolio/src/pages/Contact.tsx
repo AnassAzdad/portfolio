@@ -10,7 +10,7 @@ function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("");
 
-  // Meteor achtergrond
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -125,7 +125,7 @@ function Contact() {
 
         {status && <p className="status">{status}</p>}
 
-        {/* ✅ Download CV knop */}
+        
         <div style={{ marginTop: "2rem" }}>
           <a
             href="/CV_Anass_Azdad.pdf"
