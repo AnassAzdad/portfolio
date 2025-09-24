@@ -1,0 +1,126 @@
+/* Achtergrond + container */
+.project1-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.project1-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: black;
+}
+
+/* Kalender box */
+.calendar-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  width: 90%;
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(162, 89, 255, 0.6);
+  color: #fff;
+}
+
+/* Header */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.calendar-header h2 {
+  text-transform: capitalize;
+}
+
+/* Weekdays */
+.days-header,
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.day-name {
+  font-weight: bold;
+  padding: 0.5rem;
+  border-bottom: 1px solid #444;
+}
+
+/* Dagen */
+.day {
+  padding: 1rem;
+  border: 1px solid #333;
+  cursor: pointer;
+  min-height: 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.day:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.day.selected {
+  border: 2px solid #00aaff;
+  background: rgba(0, 170, 255, 0.15);
+}
+
+.empty {
+  background: #111;
+}
+
+/* Events */
+.event {
+  background: #00ffea;
+  color: #000;
+  border-radius: 6px;
+  padding: 2px 4px;
+  margin-top: 4px;
+  font-size: 0.8rem;
+}
+.other-month {
+  color: #666; /* donkergrijs zodat je ziet dat het niet deze maand is */
+  background: #181818; /* iets donkerder box */
+}
+
+
+/* Form */
+.event-form {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #111;
+  border-radius: 10px;
+}
+
+.event-form input {
+  width: 70%;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 6px;
+  border: none;
+}
+
+.event-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #00ffea;
+  color: #000;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
