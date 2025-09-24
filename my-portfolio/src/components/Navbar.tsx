@@ -1,14 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext"; // ✅ import theme hook
 
 const Header: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header
       style={{
         position: "sticky",
         top: 0,
         zIndex: 50,
-        backgroundColor: "#1f1f1f", // donkergrijs
+        backgroundColor: theme === "dark" ? "#1f1f1f" : "#f5f5f5",
         padding: "1rem 2rem",
         display: "flex",
         alignItems: "center",
@@ -19,17 +22,18 @@ const Header: React.FC = () => {
       {/* Logo / Naam */}
       <h1
         style={{
-          color: "#fff",
+          color: theme === "dark" ? "#fff" : "#222",
           fontSize: "1.5rem",
           fontWeight: "bold",
           letterSpacing: "1px",
         }}
       >
-        Portfolio <span style={{ color: "#bbb" }}>Anass</span>
+        Portfolio{" "}
+        <span style={{ color: theme === "dark" ? "#bbb" : "#555" }}>Anass</span>
       </h1>
 
       {/* Navigatie */}
-      <nav>
+      <nav style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
         <ul
           style={{
             listStyle: "none",
@@ -49,7 +53,7 @@ const Header: React.FC = () => {
               <Link
                 to={item.path}
                 style={{
-                  color: "#fff",
+                  color: theme === "dark" ? "#fff" : "#222",
                   textDecoration: "none",
                   fontWeight: 500,
                   position: "relative",
@@ -57,34 +61,40 @@ const Header: React.FC = () => {
                   transition: "color 0.3s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#bbb";
+                  e.currentTarget.style.color =
+                    theme === "dark" ? "#bbb" : "#666";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "#fff";
+                  e.currentTarget.style.color =
+                    theme === "dark" ? "#fff" : "#222";
                 }}
               >
                 {item.name}
-                {/* underline animatie */}
-                <span
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    bottom: 0,
-                    height: "2px",
-                    width: "0%",
-                    backgroundColor: "#bbb",
-                    transition: "width 0.3s ease",
-                  }}
-                  className="nav-underline"
-                />
               </Link>
             </li>
           ))}
         </ul>
+
+        {/* 🌙/☀️ Theme toggle button */}
+        <button
+          onClick={toggleTheme}
+          style={{
+            marginLeft: "1rem",
+            padding: "0.4rem 0.8rem",
+            borderRadius: "20px",
+            cursor: "pointer",
+            border: "none",
+            fontSize: "1.2rem",
+            background: theme === "dark" ? "#a259ff" : "#8b3ddb",
+            color: "white",
+            transition: "all 0.3s",
+          }}
+        >
+          {theme === "dark" ? "🌞" : "🌙"}
+        </button>
       </nav>
     </header>
   );
 };
 
 export default Header;
-           

@@ -1,26 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import "./Project3.css";
 
-type SymbolsMap = Record<string, { description: string; code: string }>;
-
 const FALLBACK_SYMBOLS = ["EUR", "USD", "MAD", "GBP", "JPY", "CAD"];
 
-// Kleine helper om bedrag veilig te parsen (ondersteunt ook komma’s)
+// Kleine helper om bedrag veilig te parsen
 function parseAmount(input: string): number {
   if (input == null) return NaN;
-  // spaties eruit; NL komma → punt
   const normalized = String(input).trim().replace(",", ".");
   const num = Number(normalized);
   return Number.isFinite(num) ? num : NaN;
 }
 
 function Project3() {
-  // Houd de raw string aan (voorkomt rare jumps tijdens typen)
   const [amountStr, setAmountStr] = useState<string>("100");
   const [fromCurrency, setFromCurrency] = useState<string>("EUR");
   const [toCurrency, setToCurrency] = useState<string>("USD");
 
-  const [symbols, setSymbols] = useState<string[]>([]);
+  const [symbols, setSymbols] = useState<string[]>(FALLBACK_SYMBOLS);
   const [result, setResult] = useState<number | null>(null);
   const [rate, setRate] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,30 +24,22 @@ function Project3() {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // 1) Laad alle valuta’s één keer
+  // ✅ Laad valutalijst via Frankfurter
   useEffect(() => {
-    let cancelled = false;
     (async () => {
       try {
-        const res = await fetch("https://api.exchangerate.host/symbols");
-        if (!res.ok) throw new Error("Kon valuta-symbolen niet laden.");
-        const data = (await res.json()) as { symbols?: SymbolsMap };
-        const list = data.symbols ? Object.keys(data.symbols) : [];
-        if (!cancelled) setSymbols(list.length ? list : FALLBACK_SYMBOLS);
+        const res = await fetch("https://api.frankfurter.app/currencies");
+        const data = await res.json();
+        setSymbols(Object.keys(data));
       } catch {
-        if (!cancelled) setSymbols(FALLBACK_SYMBOLS);
+        setSymbols(FALLBACK_SYMBOLS);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
-  // 2) Converteer automatisch bij wijzigingen
+  // ✅ Converteer automatisch bij wijzigingen
   useEffect(() => {
     const amt = parseAmount(amountStr);
-
-    // Lege of invalide input → toon geen error, gewoon geen resultaat
     if (!Number.isFinite(amt) || amt < 0) {
       setResult(null);
       setRate(null);
@@ -59,7 +47,6 @@ function Project3() {
       return;
     }
 
-    // Zelfde valuta → direct 1:1
     if (fromCurrency === toCurrency) {
       setResult(amt);
       setRate(1);
@@ -67,63 +54,41 @@ function Project3() {
       return;
     }
 
-    let aborted = false;
-    const controller = new AbortController();
-
-    const convert = async () => {
+    (async () => {
       setLoading(true);
       setError("");
       try {
-        const url = `https://api.exchangerate.host/convert?from=${encodeURIComponent(
-          fromCurrency
-        )}&to=${encodeURIComponent(toCurrency)}&amount=${encodeURIComponent(
-          amt
-        )}`;
-        const res = await fetch(url, { signal: controller.signal });
+        const url = `https://api.frankfurter.app/latest?amount=${amt}&from=${fromCurrency}&to=${toCurrency}`;
+        const res = await fetch(url);
         if (!res.ok) throw new Error("Kon koersen niet ophalen.");
         const data = await res.json();
 
-        // Sterkere checks (sommige responses geven result:null bij fout)
-        if (data?.success && typeof data.result === "number") {
-          if (!aborted) {
-            setResult(data.result);
-            setRate(typeof data.info?.rate === "number" ? data.info.rate : null);
-            setError("");
-          }
+        if (data.rates && data.rates[toCurrency]) {
+          const r = data.rates[toCurrency];
+          setResult(r);
+          setRate(r / amt);
         } else {
-          if (!aborted) {
-            setResult(null);
-            setRate(null);
-            setError(`Kon ${fromCurrency} → ${toCurrency} niet converteren.`);
-          }
-        }
-      } catch (e: any) {
-        if (!aborted) {
-          if (e?.name === "AbortError") return; // genegeerd
           setResult(null);
           setRate(null);
-          setError(e?.message || "Er ging iets mis met de conversie.");
+          setError("Geen resultaat voor dit valutapaar.");
         }
+      } catch (e: any) {
+        setResult(null);
+        setRate(null);
+        setError(e?.message || "Er ging iets mis.");
       } finally {
-        if (!aborted) setLoading(false);
+        setLoading(false);
       }
-    };
-
-    convert();
-
-    return () => {
-      aborted = true;
-      controller.abort();
-    };
+    })();
   }, [amountStr, fromCurrency, toCurrency]);
 
-  // 3) Swap-knop
+  // Wissel knop
   const swapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
   };
 
-  // 4) Meteoren achtergrond (zoals je andere pagina’s)
+  // ✅ Meteoren achtergrond
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -142,7 +107,6 @@ function Project3() {
       size: number;
       speed: number;
       ctx: CanvasRenderingContext2D;
-
       constructor(c: CanvasRenderingContext2D, w: number, h: number) {
         this.ctx = c;
         this.x = Math.random() * w;
@@ -167,7 +131,6 @@ function Project3() {
 
     let meteors: Meteor[] = [];
     let raf = 0;
-
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       meteors.forEach((m, i) => {
@@ -187,14 +150,7 @@ function Project3() {
     };
   }, []);
 
-  const amount = Number.isFinite(parseAmount(amountStr))
-    ? parseAmount(amountStr)
-    : 0;
-
-  // Zorg dat dropdowns altijd de huidige keuzes tonen, ook als symbols nog laden
-  const options = Array.from(
-    new Set([...(symbols.length ? symbols : FALLBACK_SYMBOLS), fromCurrency, toCurrency])
-  );
+  const amount = parseAmount(amountStr) || 0;
 
   return (
     <div className="project3-container">
@@ -211,21 +167,13 @@ function Project3() {
               placeholder="0.00"
               value={amountStr}
               onChange={(e) => setAmountStr(e.target.value)}
-              onBlur={(e) => {
-                // bij verlaten veld: mooi normaliseren
-                const n = parseAmount(e.target.value);
-                if (Number.isFinite(n)) setAmountStr(String(n));
-              }}
             />
           </div>
 
           <div className="field">
             <label>Van</label>
-            <select
-              value={fromCurrency}
-              onChange={(e) => setFromCurrency(e.target.value)}
-            >
-              {options.map((c) => (
+            <select value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)}>
+              {symbols.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
@@ -239,11 +187,8 @@ function Project3() {
 
           <div className="field">
             <label>Naar</label>
-            <select
-              value={toCurrency}
-              onChange={(e) => setToCurrency(e.target.value)}
-            >
-              {options.map((c) => (
+            <select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)}>
+              {symbols.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
@@ -269,22 +214,14 @@ function Project3() {
             </span>
           </div>
 
-        {rate !== null && (
-          <div className="rate">
-            1 {fromCurrency} = <strong>{rate.toLocaleString(undefined, { maximumFractionDigits: 6 })}</strong> {toCurrency}
-          </div>
-        )}
+          {rate !== null && (
+            <div className="rate">
+              1 {fromCurrency} ={" "}
+              <strong>{rate.toLocaleString(undefined, { maximumFractionDigits: 6 })}</strong>{" "}
+              {toCurrency}
+            </div>
+          )}
         </div>
-
-        {!loading && !error && result === null && (
-          <p className="muted">Voer een bedrag in om te converteren.</p>
-        )}
-
-        {!loading && !error && result !== null && (
-          <p className="muted">
-            Live rates via <strong>exchangerate.host</strong>
-          </p>
-        )}
       </div>
     </div>
   );

@@ -29,6 +29,33 @@
   color: #61dafb;
 }
 
+body.dark {
+  background-color: black;
+  color: white;
+}
+
+body.light {
+  background-color: #f5f5f5;
+  color: #222;
+}
+
+.theme-toggle {
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  border: none;
+  font-size: 1.2rem;
+  background: #a259ff;
+  color: white;
+  transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+  background: #8b3ddb;
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -1,36 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useTheme } from "../context/ThemeContext";
 import emailjs from "@emailjs/browser";
 import "./Contact.css";
 
 function Contact() {
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const [status, setStatus] = useState<string>("");
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { theme } = useTheme();
 
-  // 🔹 Verstuur email via EmailJS
-  const sendEmail = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formRef.current) return;
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState("");
 
-    emailjs
-      .sendForm(
-        "service_q48jgdq", // <-- jouw service ID
-        "template_ixgtndx", // <-- jouw template ID
-        formRef.current,
-        "kBJ0ovQsp0AOVFzz5" // <-- jouw public key
-      )
-      .then(
-        () => {
-          setStatus("✅ Bericht succesvol verstuurd!");
-          formRef.current?.reset();
-        },
-        () => {
-          setStatus("❌ Versturen mislukt, probeer opnieuw.");
-        }
-      );
-  };
-
-  // 🔹 Meteor achtergrond (zelfde als home/project1)
+  // Meteor achtergrond
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -49,7 +29,6 @@ function Contact() {
       size: number;
       speed: number;
       ctx: CanvasRenderingContext2D;
-
       constructor(c: CanvasRenderingContext2D, w: number, h: number) {
         this.ctx = c;
         this.x = Math.random() * w;
@@ -63,7 +42,7 @@ function Contact() {
       }
       draw() {
         const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
-        g.addColorStop(0, "white");
+        g.addColorStop(0, theme === "dark" ? "white" : "black");
         g.addColorStop(1, "transparent");
         this.ctx.fillStyle = g;
         this.ctx.beginPath();
@@ -74,9 +53,7 @@ function Contact() {
 
     let meteors: Meteor[] = [];
     let raf = 0;
-
     const animate = () => {
-      if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       meteors.forEach((m, i) => {
         m.update();
@@ -86,27 +63,88 @@ function Contact() {
       if (Math.random() < 0.02) meteors.push(new Meteor(ctx, canvas.width, canvas.height));
       raf = requestAnimationFrame(animate);
     };
-
     animate();
+
     window.addEventListener("resize", resizeCanvas);
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [theme]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("Versturen...");
+
+    emailjs
+      .send("service_xxx", "template_xxx", form, "publicKey_xxx")
+      .then(() => {
+        setStatus("✅ Bericht verzonden!");
+        setForm({ name: "", email: "", message: "" });
+      })
+      .catch(() => setStatus("❌ Er ging iets mis."));
+  };
 
   return (
-    <div className="contact-container">
+    <div
+      className="contact-container"
+      style={{
+        backgroundColor: theme === "dark" ? "black" : "white",
+        color: theme === "dark" ? "white" : "black",
+      }}
+    >
       <canvas ref={canvasRef} className="contact-background" />
+
       <div className="contact-box">
-        <h1>📩 Neem contact op</h1>
-        <form ref={formRef} onSubmit={sendEmail}>
-          <input type="text" name="name" placeholder="Jouw naam" required />
-          <input type="email" name="email" placeholder="Jouw e-mail" required />
-          <textarea name="message" placeholder="Je bericht..." rows={5} required />
+        <h1>📬 Contact</h1>
+        <p>Stuur me gerust een bericht via dit formulier.</p>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Naam"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            required
+          />
+          <textarea
+            placeholder="Bericht"
+            value={form.message}
+            onChange={(e) => setForm({ ...form, message: e.target.value })}
+            required
+          />
           <button type="submit">Verstuur</button>
         </form>
+
         {status && <p className="status">{status}</p>}
+
+        {/* ✅ Download CV knop */}
+        <div style={{ marginTop: "2rem" }}>
+          <a
+            href="/CV_Anass_Azdad.pdf"
+            download
+            style={{
+              display: "inline-block",
+              padding: "1rem 2.5rem",
+              backgroundColor: "#a259ff",
+              color: "#fff",
+              fontWeight: "bold",
+              borderRadius: "9999px",
+              textDecoration: "none",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+            }}
+          >
+            📄 Download mijn CV
+          </a>
+        </div>
       </div>
     </div>
   );

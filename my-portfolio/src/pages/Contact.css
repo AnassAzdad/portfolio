@@ -49,6 +49,25 @@
   font-size: 1rem;
   outline: none;
 }
+.cv-button {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  background: #a259ff;
+  color: white;
+  font-weight: bold;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.cv-button:hover {
+  background: #8b3ddb;
+  transform: translateY(-3px);
+}
+
+
 
 .contact-box button {
   padding: 1rem;

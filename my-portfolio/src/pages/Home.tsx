@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTheme } from "../context/ThemeContext"; // ✅ Theme hook
 
 const roles = ["Software Developer in opleiding", "Frontend Developer"];
 
 const Home: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { theme } = useTheme(); // ✅ huidige theme (dark / light)
   const [currentText, setCurrentText] = useState("");
   const [roleIndex, setRoleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -67,7 +69,7 @@ const Home: React.FC = () => {
           this.x - 30,
           this.y - 30
         );
-        gradient.addColorStop(0, "white");
+        gradient.addColorStop(0, theme === "dark" ? "white" : "black");
         gradient.addColorStop(1, "transparent");
         this.ctx.fillStyle = gradient;
         this.ctx.beginPath();
@@ -77,6 +79,7 @@ const Home: React.FC = () => {
     }
 
     let meteors: Meteor[] = [];
+    let raf = 0;
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -87,13 +90,16 @@ const Home: React.FC = () => {
       });
       if (Math.random() < 0.02)
         meteors.push(new Meteor(ctx, canvas.width, canvas.height));
-      requestAnimationFrame(animate);
+      raf = requestAnimationFrame(animate);
     };
 
     animate();
     window.addEventListener("resize", resizeCanvas);
-    return () => window.removeEventListener("resize", resizeCanvas);
-  }, []);
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      cancelAnimationFrame(raf);
+    };
+  }, [theme]);
 
   return (
     <div
@@ -102,8 +108,8 @@ const Home: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         overflow: "hidden",
-        backgroundColor: "black",
-        color: "white",
+        backgroundColor: theme === "dark" ? "black" : "white",
+        color: theme === "dark" ? "white" : "black",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -151,7 +157,7 @@ const Home: React.FC = () => {
         <p
           style={{
             fontSize: "1.25rem",
-            color: "#ccc",
+            color: theme === "dark" ? "#ccc" : "#444",
             marginBottom: "3rem",
           }}
         >
@@ -174,8 +180,8 @@ const Home: React.FC = () => {
               alignItems: "center",
               gap: "0.5rem",
               padding: "1rem 2.5rem",
-              backgroundColor: "#2d2d2d",
-              color: "#fff",
+              backgroundColor: theme === "dark" ? "#2d2d2d" : "#eee",
+              color: theme === "dark" ? "#fff" : "#000",
               fontWeight: 600,
               borderRadius: "9999px",
               textDecoration: "none",

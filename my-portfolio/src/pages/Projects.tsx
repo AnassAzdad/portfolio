@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import "./Projects.css";
+import { useEffect, useRef } from "react";
+import { useTheme } from "../context/ThemeContext";
 
-const Projects: React.FC = () => {
+function Projects() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { theme } = useTheme();
 
-  // Meteors achtergrond (zelfde als Home en Project pagina’s)
+  // Meteor achtergrond
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -23,10 +24,9 @@ const Projects: React.FC = () => {
       size: number;
       speed: number;
       ctx: CanvasRenderingContext2D;
-
-      constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        this.ctx = ctx;
-        this.x = Math.random() * width;
+      constructor(c: CanvasRenderingContext2D, w: number, h: number) {
+        this.ctx = c;
+        this.x = Math.random() * w;
         this.y = -10;
         this.size = Math.random() * 3 + 2;
         this.speed = Math.random() * 4 + 3;
@@ -36,13 +36,8 @@ const Projects: React.FC = () => {
         this.y += this.speed;
       }
       draw() {
-        const g = this.ctx.createLinearGradient(
-          this.x,
-          this.y,
-          this.x - 30,
-          this.y - 30
-        );
-        g.addColorStop(0, "white");
+        const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
+        g.addColorStop(0, theme === "dark" ? "white" : "black");
         g.addColorStop(1, "transparent");
         this.ctx.fillStyle = g;
         this.ctx.beginPath();
@@ -53,27 +48,24 @@ const Projects: React.FC = () => {
 
     let meteors: Meteor[] = [];
     let raf = 0;
-
     const animate = () => {
-      if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       meteors.forEach((m, i) => {
         m.update();
         m.draw();
         if (m.y > canvas.height) meteors.splice(i, 1);
       });
-      if (Math.random() < 0.02)
-        meteors.push(new Meteor(ctx, canvas.width, canvas.height));
+      if (Math.random() < 0.02) meteors.push(new Meteor(ctx, canvas.width, canvas.height));
       raf = requestAnimationFrame(animate);
     };
-
     animate();
+
     window.addEventListener("resize", resizeCanvas);
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <div
@@ -82,59 +74,31 @@ const Projects: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         overflow: "hidden",
-        backgroundColor: "black",
-        color: "white",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingTop: "5rem",
+        backgroundColor: theme === "dark" ? "black" : "white",
+        color: theme === "dark" ? "white" : "black",
+        padding: "6rem 2rem",
         textAlign: "center",
       }}
     >
-      <canvas
-        ref={canvasRef}
-        style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }}
-      />
+      <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }} />
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "1600px" }}>
-        <h1
-          style={{
-            fontSize: "3.5rem",
-            fontWeight: "900",
-            marginBottom: "3rem",
-            textShadow: "0 0 10px #a259ff",
-          }}
-        >
-          🚀 Mijn Projecten
-        </h1>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: "1400px", margin: "0 auto" }}>
+        <h1 style={{ fontSize: "3rem", marginBottom: "2rem", color: "#a259ff" }}>🚀 Projecten</h1>
+        <p style={{ marginBottom: "3rem" }}>
+          Hier zijn mijn favoriete projecten. Klik erop om meer te bekijken.
+        </p>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(1, 1fr)",
-            gap: "3.5rem",
-            maxWidth: "1200px",
-            width: "90%",
-            margin: "0 auto",
-            marginBottom: "4rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "3rem",
           }}
         >
           {[
-            {
-              title: "Project 1: Kalender",
-              img: "/project1.png",
-              link: "/project1",
-            },
-            {
-              title: "Project 2: Weer App",
-              img: "/project2.png",
-              link: "/project2",
-            },
-            {
-              title: "Project 3: Currency Converter",
-              img: "/project3.png",
-              link: "/project3",
-            },
+            { title: "Project 1: Kalender", img: "/project1.png", link: "/project1" },
+            { title: "Project 2: Weer App", img: "/project2.png", link: "/project2" },
+            { title: "Project 3: Currency Converter", img: "/project3.png", link: "/project3" },
           ].map((project, idx) => (
             <a
               key={idx}
@@ -142,11 +106,10 @@ const Projects: React.FC = () => {
               style={{
                 display: "block",
                 position: "relative",
-                borderRadius: "16px",
+                borderRadius: "12px",
                 overflow: "hidden",
-                height: "350px", // grotere boxen
-                cursor: "pointer",
-                boxShadow: "0 6px 25px rgba(0,0,0,0.6)",
+                height: "280px",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
               }}
             >
               <div
@@ -156,8 +119,7 @@ const Projects: React.FC = () => {
                   backgroundPosition: "center",
                   width: "100%",
                   height: "100%",
-                  filter: "blur(1.5px) brightness(0.65)",
-                  transition: "all 0.3s ease",
+                  filter: "blur(1.2px) brightness(0.7)",
                 }}
               />
               <div
@@ -171,12 +133,11 @@ const Projects: React.FC = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#fff",
-                  fontSize: "2rem",
-                  fontWeight: 800,
-                  textAlign: "center",
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
                 }}
               >
-                {project.title} <br /> Klik om te bekijken
+                {project.title}
               </div>
             </a>
           ))}
@@ -184,6 +145,6 @@ const Projects: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Projects;

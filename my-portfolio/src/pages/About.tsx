@@ -72,42 +72,54 @@ function About() {
     <div className="about-container">
       <canvas ref={canvasRef} className="about-background" />
 
-      <section className="about-section">
-        <h1>👋 Over mij</h1>
-        <p>
-          Ik ben <span className="highlight">Anass</span>, een software developer in opleiding 
-          met een passie voor <strong>frontend development</strong> en het bouwen van 
-          moderne, interactieve webapplicaties. 🚀
-        </p>
-      </section>
+   <section className="about-section">
+  <h1>👋 Over mij</h1>
+  <p>
+    Hallo, ik ben <span className="highlight">Anass Azdad</span>.  
+    Ik zit in mijn derde jaar Software Development op het Mediacollege Amsterdam.  
+    Ik hou me vooral bezig met <strong>frontend</strong>, omdat ik het tof vind om iets te maken wat er strak uitziet én goed werkt. 
+  </p>
+</section>
 
-      <section className="about-section">
-        <div className="about-image-cta">
-          {/* ✅ Vervanging avatar.png door een anonieme placeholder */}
-          <div className="avatar-placeholder">?</div>
+<section className="about-section">
+  <div className="about-image-cta">
+    <div className="about-image">
+    
+    </div>
+    <div>
+      <p>
+        Tijdens school heb ik o.a. gewerkt aan een <strong>kalender/planner</strong>, en thuis heb ik gewerkt aan een <strong>weer-app</strong> en een <strong>currency converter</strong>.  
+        Ik vind het leuk om te spelen met <span className="highlight">API’s</span> en animaties om dingen wat extra leven te geven.  
+      </p>
+      <p>
+        Styling vind ik trouwens ook belangrijk.  
+        We zijn officieel geen designers, maar ik zorg er wel voor dat m’n projecten er netjes en modern uitzien.
+      </p>
+      <a href="/projects" className="cta-button">
+        Bekijk mijn projecten
+      </a>
+    </div>
+  </div>
+</section>
 
-          <div>
-            <p>
-              Mijn favoriete tools zijn <span className="highlight">React</span>,{" "}
-              <span className="highlight">TypeScript</span> en{" "}
-              <span className="highlight">CSS</span>. 
-              Ik hou van experimenteren met animaties, API’s en creatieve ideeën om 
-              mijn projecten een unieke stijl te geven.
-            </p>
-            <a href="/projects" className="cta-button">
-              Bekijk mijn projecten
-            </a>
-          </div>
-        </div>
-      </section>
 
-      {/* ✅ Skills Row */}
+
+
+      {/* Skills */}
       <section className="about-section skills-section">
         <h2>⚡ Skills</h2>
         <div className="skills-row">
-          {[ "React", "TypeScript", "CSS", "HTML", "Git" ].map((skill, idx) => (
+          {[
+            { name: "React",   },
+            { name: "TypeScript",  },
+            { name: "JavaScript",   },
+            { name: "PHP",   },
+            { name: "CSS",   },
+            { name: "HTML",   },
+            { name: "Git",  },
+          ].map((skill, idx) => (
             <div key={idx} className="skill-icon">
-              {skill}
+              <img  alt={skill.name} />
             </div>
           ))}
         </div>
