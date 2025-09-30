@@ -1,18 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useTheme } from "../context/ThemeContext"; 
+import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
 
-const roles = ["Software Developer in opleiding", "Frontend Developer"];
+const roles = {
+  nl: ["Software Developer in opleiding", "Frontend Developer"],
+  en: ["Software Developer in training", "Frontend Developer"],
+};
 
 const Home: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { theme } = useTheme(); 
+  const { theme } = useTheme();
+  const { language } = useLanguage();
+  const t = translations[language].home;
+
+  // Typewriter effect
   const [currentText, setCurrentText] = useState("");
   const [roleIndex, setRoleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
 
-  
   useEffect(() => {
-    const currentRole = roles[roleIndex];
+    const currentRole = roles[language][roleIndex];
     if (charIndex < currentRole.length) {
       const timeout = setTimeout(() => {
         setCurrentText((prev) => prev + currentRole[charIndex]);
@@ -23,13 +31,13 @@ const Home: React.FC = () => {
       const timeout = setTimeout(() => {
         setCurrentText("");
         setCharIndex(0);
-        setRoleIndex((prev) => (prev + 1) % roles.length);
+        setRoleIndex((prev) => (prev + 1) % roles[language].length);
       }, 2000);
       return () => clearTimeout(timeout);
     }
-  }, [charIndex, roleIndex]);
+  }, [charIndex, roleIndex, language]);
 
-  // Meteor effect
+  // Meteor effect (zelfde als je had)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -131,7 +139,7 @@ const Home: React.FC = () => {
             marginBottom: "1rem",
           }}
         >
-          Hallo, ik ben{" "}
+          {t.greeting}{" "}
           <span
             style={{
               color: "#a259ff",
@@ -161,8 +169,7 @@ const Home: React.FC = () => {
             marginBottom: "3rem",
           }}
         >
-          Ik bouw graag mooie, interactieve webapplicaties met moderne
-          technologieën.
+          {t.tagline}
         </p>
 
         <div
@@ -190,7 +197,7 @@ const Home: React.FC = () => {
               fontSize: "1.25rem",
             }}
           >
-            Meer over mij <span style={{ fontSize: "1.5rem" }}>➔</span>
+            {t.moreAboutMe} <span style={{ fontSize: "1.5rem" }}>➔</span>
           </a>
 
           <a
@@ -210,11 +217,10 @@ const Home: React.FC = () => {
               fontSize: "1.25rem",
             }}
           >
-            Bekijk mijn projecten <span style={{ fontSize: "1.5rem" }}>➔</span>
+            {t.viewProjects} <span style={{ fontSize: "1.5rem" }}>➔</span>
           </a>
         </div>
 
-        
         <div
           style={{
             display: "grid",
@@ -226,11 +232,7 @@ const Home: React.FC = () => {
             marginBottom: "4rem",
           }}
         >
-          {[
-            { title: "Project 1: Kalender", img: "/project1.png" },
-            { title: "Project 2: Weer App", img: "/project2.png" },
-            { title: "Project 3: Currency Converter", img: "/project3.png" },
-          ].map((project, idx) => (
+          {t.projects.map((project, idx) => (
             <a
               key={idx}
               href="/projects"
@@ -246,7 +248,7 @@ const Home: React.FC = () => {
             >
               <div
                 style={{
-                  backgroundImage: `url(${project.img})`,
+                  backgroundImage: `url(/project${idx + 1}.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   width: "100%",
@@ -271,7 +273,7 @@ const Home: React.FC = () => {
                   textAlign: "center",
                 }}
               >
-                {project.title} <br /> Klik om te bekijken
+                {project.title} <br /> {project.subtitle}
               </div>
             </a>
           ))}

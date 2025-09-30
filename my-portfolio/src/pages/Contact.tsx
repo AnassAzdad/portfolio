@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
 import emailjs from "@emailjs/browser";
 import "./Contact.css";
 
 function Contact() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { theme } = useTheme();
+  const { language } = useLanguage();
+  const t = translations[language].contact;
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("");
 
-  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -41,7 +44,12 @@ function Contact() {
         this.y += this.speed;
       }
       draw() {
-        const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
+        const g = this.ctx.createLinearGradient(
+          this.x,
+          this.y,
+          this.x - 30,
+          this.y - 30
+        );
         g.addColorStop(0, theme === "dark" ? "white" : "black");
         g.addColorStop(1, "transparent");
         this.ctx.fillStyle = g;
@@ -60,7 +68,8 @@ function Contact() {
         m.draw();
         if (m.y > canvas.height) meteors.splice(i, 1);
       });
-      if (Math.random() < 0.02) meteors.push(new Meteor(ctx, canvas.width, canvas.height));
+      if (Math.random() < 0.02)
+        meteors.push(new Meteor(ctx, canvas.width, canvas.height));
       raf = requestAnimationFrame(animate);
     };
     animate();
@@ -74,15 +83,17 @@ function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("Versturen...");
+    setStatus(language === "nl" ? "Versturen..." : "Sending...");
 
     emailjs
       .send("service_xxx", "template_xxx", form, "publicKey_xxx")
       .then(() => {
-        setStatus("✅ Bericht verzonden!");
+        setStatus(language === "nl" ? "✅ Bericht verzonden!" : "✅ Message sent!");
         setForm({ name: "", email: "", message: "" });
       })
-      .catch(() => setStatus("❌ Er ging iets mis."));
+      .catch(() =>
+        setStatus(language === "nl" ? "❌ Er ging iets mis." : "❌ Something went wrong.")
+      );
   };
 
   return (
@@ -96,13 +107,13 @@ function Contact() {
       <canvas ref={canvasRef} className="contact-background" />
 
       <div className="contact-box">
-        <h1>📬 Contact</h1>
-        <p>Stuur me gerust een bericht via dit formulier.</p>
+        <h1>📬 {t.title}</h1>
+        <p>{t.description}</p>
 
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Naam"
+            placeholder={language === "nl" ? "Naam" : "Name"}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
@@ -115,17 +126,18 @@ function Contact() {
             required
           />
           <textarea
-            placeholder="Bericht"
+            placeholder={language === "nl" ? "Bericht" : "Message"}
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
             required
           />
-          <button type="submit">Verstuur</button>
+          <button type="submit">
+            {language === "nl" ? "Verstuur" : "Send"}
+          </button>
         </form>
 
         {status && <p className="status">{status}</p>}
 
-        
         <div style={{ marginTop: "2rem" }}>
           <a
             href="/CV_Anass_Azdad.pdf"
@@ -142,7 +154,7 @@ function Contact() {
               boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
             }}
           >
-            📄 Download mijn CV
+            📄 {language === "nl" ? "Download mijn CV" : "Download my CV"}
           </a>
         </div>
       </div>

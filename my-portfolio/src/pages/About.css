@@ -76,11 +76,14 @@
   background: #8b3ddb;
   transform: translateY(-3px);
 }
+
+
+
 .skills-section h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   color: #a259ff;
-  text-shadow: 0 0 10px #a259ff;
+  text-shadow: 0 0 12px #a259ff, 0 0 24px #a259ff;
   text-align: center;
 }
 
@@ -90,18 +93,52 @@
   align-items: center;
   gap: 2.5rem;
   flex-wrap: wrap;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+.skill-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  animation: float 3s ease-in-out infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-icon:nth-child(2n) {
+  animation-delay: 1.5s; 
 }
 
 .skill-icon img {
-  width: 50px;
-  height: 50px;
-  transition: transform 0.3s ease;
+  width: 65px;
+  height: 65px;
+  background: #111;
+  border-radius: 50%;
+  padding: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .skill-icon img:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
+  background: #a259ff;
+  box-shadow: 0 0 10px #a259ff, 0 0 20px #a259ff, 0 0 30px #a259ff;
 }
+
+.skill-icon p {
+  font-size: 0.9rem;
+  color: #ddd;
+  margin: 0;
+}
+
+/* Float animatie */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+
 
 .avatar-placeholder {
   width: 180px;
@@ -116,11 +153,4 @@
   color: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   margin-bottom: 1.5rem;
-}
-
-.skill-icon {
-  transition: transform 0.3s ease;
-}
-.skill-icon:hover {
-  transform: scale(1.2);
 }

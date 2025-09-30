@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTheme } from "../context/ThemeContext"; // ✅ theme hook toevoegen
 import "./Project2.css";
 
 type GeoResult = {
@@ -17,6 +18,7 @@ function Project2() {
   const [error, setError] = useState("");
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  const { theme } = useTheme(); // ✅ theme hook
   const API_KEY = "0402f893d9e221b875a0033de355b8b4"; 
 
   const handleSearch = async () => {
@@ -27,7 +29,6 @@ function Project2() {
     setPlace(null);
 
     try {
-      
       const geoRes = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${API_KEY}`
       );
@@ -43,7 +44,6 @@ function Project2() {
       const { name, lat, lon, country, state } = geoData[0];
       setPlace({ name, country, state });
 
-      
       const wxRes = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=nl`
       );
@@ -63,7 +63,7 @@ function Project2() {
     }
   };
 
-  
+  // 🎇 Meteor achtergrond
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -96,7 +96,7 @@ function Project2() {
       }
       draw() {
         const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
-        g.addColorStop(0, "white");
+        g.addColorStop(0, theme === "dark" ? "white" : "black"); // ✅ afhankelijk van theme
         g.addColorStop(1, "transparent");
         this.ctx.fillStyle = g;
         this.ctx.beginPath();
@@ -125,15 +125,29 @@ function Project2() {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, []);
+  }, [theme]);
 
   return (
-    <div className="project2-container">
+    <div
+      className="project2-container"
+      style={{
+        background: theme === "dark" ? "black" : "white",
+        color: theme === "dark" ? "white" : "black",
+      }}
+    >
       <canvas ref={canvasRef} className="project2-background" />
 
-      <div className="weather-box">
-        <h1>🌤️ Weather App</h1>
-        <p>Typ een stad (wereldwijd) en check het weer.</p>
+      <div
+        className="weather-box"
+        style={{
+          background: theme === "dark" ? "rgba(30,30,30,0.9)" : "rgba(240,240,240,0.9)",
+          color: theme === "dark" ? "white" : "black",
+        }}
+      >
+        <h1 style={{ color: theme === "dark" ? "white" : "black" }}>🌤️ Weather App</h1>
+        <p style={{ color: theme === "dark" ? "white" : "black" }}>
+          Typ een stad (wereldwijd) en check het weer.
+        </p>
 
         <div className="search-box">
           <input
@@ -142,15 +156,33 @@ function Project2() {
             value={city}
             onChange={(e) => setCity(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            style={{
+              background: theme === "dark" ? "#222" : "#f0f0f0",
+              color: theme === "dark" ? "white" : "black",
+            }}
           />
-          <button onClick={handleSearch}>Zoek</button>
+          <button
+            onClick={handleSearch}
+            style={{
+              background: theme === "dark" ? "#a259ff" : "#6b3dcb",
+              color: "white",
+            }}
+          >
+            Zoek
+          </button>
         </div>
 
         {loading && <p>⏳ Laden...</p>}
         {error && <p className="error">{error}</p>}
 
         {place && weather && (
-          <div className="weather-card">
+          <div
+            className="weather-card"
+            style={{
+              background: theme === "dark" ? "#2d2d2d" : "#f5f5f5",
+              color: theme === "dark" ? "white" : "black",
+            }}
+          >
             <h2>
               {place.name}
               {place.state ? `, ${place.state}` : ""} ({place.country})
@@ -159,7 +191,9 @@ function Project2() {
               src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
               alt={weather.desc}
             />
-            <p className="temp">{Math.round(weather.temp)}°C</p>
+            <p className="temp" style={{ color: theme === "dark" ? "#00ffea" : "#333" }}>
+              {Math.round(weather.temp)}°C
+            </p>
             <p className="desc">{weather.desc}</p>
           </div>
         )}

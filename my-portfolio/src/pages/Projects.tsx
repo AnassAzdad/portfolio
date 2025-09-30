@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../context/ThemeContext"; // ✅ theme hook
+import "./Projects.css";
 
 function Projects() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { theme } = useTheme();
 
-  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -36,7 +36,12 @@ function Projects() {
         this.y += this.speed;
       }
       draw() {
-        const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
+        const g = this.ctx.createLinearGradient(
+          this.x,
+          this.y,
+          this.x - 30,
+          this.y - 30
+        );
         g.addColorStop(0, theme === "dark" ? "white" : "black");
         g.addColorStop(1, "transparent");
         this.ctx.fillStyle = g;
@@ -55,7 +60,8 @@ function Projects() {
         m.draw();
         if (m.y > canvas.height) meteors.splice(i, 1);
       });
-      if (Math.random() < 0.02) meteors.push(new Meteor(ctx, canvas.width, canvas.height));
+      if (Math.random() < 0.02)
+        meteors.push(new Meteor(ctx, canvas.width, canvas.height));
       raf = requestAnimationFrame(animate);
     };
     animate();
@@ -67,79 +73,73 @@ function Projects() {
     };
   }, [theme]);
 
+  const projects = [
+    {
+      title: "📅 Project 1: Kalender",
+      img: "/project1.png",
+      link: "/project1",
+      description:
+        "Een interactieve kalender waarin je afspraken kan plannen. Inclusief emailnotificaties via EmailJS en een custom UI met React en CSS."
+    },
+    {
+      title: "🌦️ Project 2: Weer App",
+      img: "/project2.png",
+      link: "/project2",
+      description:
+        "Een weer-app die live data ophaalt via de OpenWeatherMap API. Typ een stad in en krijg direct de actuele weersvoorspelling."
+    },
+    {
+      title: "💱 Project 3: Currency Converter",
+      img: "/project3.png",
+      link: "/project3",
+      description:
+        "Een valuta-converter met live wisselkoersen. Gemaakt met de ExchangeRate API en React hooks om bedragen om te rekenen tussen meerdere munteenheden."
+    }
+  ];
+
   return (
     <div
+      className="projects-container"
       style={{
-        position: "relative",
-        minHeight: "100vh",
-        width: "100%",
-        overflow: "hidden",
         backgroundColor: theme === "dark" ? "black" : "white",
-        color: theme === "dark" ? "white" : "black",
-        padding: "6rem 2rem",
-        textAlign: "center",
+        color: theme === "dark" ? "white" : "black"
       }}
     >
-      <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }} />
+      <canvas ref={canvasRef} className="projects-background" />
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "1400px", margin: "0 auto" }}>
-        <h1 style={{ fontSize: "3rem", marginBottom: "2rem", color: "#a259ff" }}>🚀 Projecten</h1>
-        <p style={{ marginBottom: "3rem" }}>
-          Hier zijn mijn favoriete projecten. Klik erop om meer te bekijken.
+      <div className="projects-content">
+        <h1
+          className="projects-title"
+          style={{ color: theme === "dark" ? "white" : "black" }}
+        >
+          🚀 Projecten
+        </h1>
+        <p style={{ color: theme === "dark" ? "white" : "black" }}>
+          Hier zijn mijn favoriete projecten. Klik erop om ze in actie te zien.
         </p>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "3rem",
-          }}
-        >
-          {[
-            { title: "Project 1: Kalender", img: "/project1.png", link: "/project1" },
-            { title: "Project 2: Weer App", img: "/project2.png", link: "/project2" },
-            { title: "Project 3: Currency Converter", img: "/project3.png", link: "/project3" },
-          ].map((project, idx) => (
-            <a
-              key={idx}
-              href={project.link}
-              style={{
-                display: "block",
-                position: "relative",
-                borderRadius: "12px",
-                overflow: "hidden",
-                height: "280px",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-              }}
-            >
-              <div
-                style={{
-                  backgroundImage: `url(${project.img})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  width: "100%",
-                  height: "100%",
-                  filter: "blur(1.2px) brightness(0.7)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#fff",
-                  fontSize: "1.5rem",
-                  fontWeight: 700,
-                }}
+        <div className="projects-grid">
+          {projects.map((p, idx) => (
+            <div key={idx}>
+              <a href={p.link} className="project-card">
+                <div
+                  className="project-image"
+                  style={{ backgroundImage: `url(${p.img})` }}
+                />
+                <div
+                  className="project-overlay"
+                  style={{ color: theme === "dark" ? "white" : "black" }}
+                >
+                  {p.title}
+                </div>
+              </a>
+              <p
+                className="project-description"
+                style={{ color: theme === "dark" ? "white" : "black" }}
               >
-                {project.title}
-              </div>
-            </a>
+                {p.description}
+              </p>
+            </div>
           ))}
         </div>
       </div>

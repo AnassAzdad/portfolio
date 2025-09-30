@@ -1,9 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext"; // 
+import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
 
-const Header: React.FC = () => {
+const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage } = useLanguage();
+  const t = translations[language].nav;
 
   return (
     <header
@@ -19,7 +23,6 @@ const Header: React.FC = () => {
         boxShadow: "0 2px 6px rgba(0,0,0,0.6)",
       }}
     >
-      
       <h1
         style={{
           color: theme === "dark" ? "#fff" : "#222",
@@ -43,39 +46,118 @@ const Header: React.FC = () => {
             padding: 0,
           }}
         >
-          {[
-            { name: "Home", path: "/" },
-            { name: "About", path: "/about" },
-            { name: "Projects", path: "/projects" },
-            { name: "Contact", path: "/contact" },
-          ].map((item) => (
-            <li key={item.path}>
-              <Link
-                to={item.path}
-                style={{
-                  color: theme === "dark" ? "#fff" : "#222",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                  position: "relative",
-                  paddingBottom: "4px",
-                  transition: "color 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color =
-                    theme === "dark" ? "#bbb" : "#666";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color =
-                    theme === "dark" ? "#fff" : "#222";
-                }}
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
+          <li>
+            <Link
+              to="/"
+              style={{
+                color: theme === "dark" ? "#fff" : "#222", // 👈 styling blijft exact zoals jij had
+                textDecoration: "none",
+                fontWeight: 500,
+                position: "relative",
+                paddingBottom: "4px",
+                transition: "color 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#bbb" : "#666";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#fff" : "#222";
+              }}
+            >
+              {t.home}
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/about"
+              style={{
+                color: theme === "dark" ? "#fff" : "#222",
+                textDecoration: "none",
+                fontWeight: 500,
+                position: "relative",
+                paddingBottom: "4px",
+                transition: "color 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#bbb" : "#666";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#fff" : "#222";
+              }}
+            >
+              {t.about}
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/projects"
+              style={{
+                color: theme === "dark" ? "#fff" : "#222",
+                textDecoration: "none",
+                fontWeight: 500,
+                position: "relative",
+                paddingBottom: "4px",
+                transition: "color 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#bbb" : "#666";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#fff" : "#222";
+              }}
+            >
+              {t.projects}
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/contact"
+              style={{
+                color: theme === "dark" ? "#fff" : "#222",
+                textDecoration: "none",
+                fontWeight: 500,
+                position: "relative",
+                paddingBottom: "4px",
+                transition: "color 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#bbb" : "#666";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color =
+                  theme === "dark" ? "#fff" : "#222";
+              }}
+            >
+              {t.contact}
+            </Link>
+          </li>
         </ul>
 
-        
+        {/* 🌍 Language Switcher */}
+        <button
+          onClick={() => setLanguage(language === "nl" ? "en" : "nl")}
+          style={{
+            marginLeft: "1rem",
+            padding: "0.4rem 0.8rem",
+            borderRadius: "20px",
+            cursor: "pointer",
+            border: "none",
+            background: "transparent",
+            color: theme === "dark" ? "#fff" : "#222",
+            fontSize: "0.9rem",
+          }}
+        >
+          {language === "nl" ? "EN" : "NL"}
+        </button>
+
+        {/* Theme toggle */}
         <button
           onClick={toggleTheme}
           style={{
@@ -97,4 +179,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default Navbar;

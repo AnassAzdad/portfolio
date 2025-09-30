@@ -1,10 +1,15 @@
 import { useEffect, useRef } from "react";
 import "./About.css";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
+import { useTheme } from "../context/ThemeContext";
 
 function About() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { language } = useLanguage();
+  const { theme } = useTheme();
+  const t = translations[language].about;
 
-  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -35,8 +40,13 @@ function About() {
         this.y += this.speed;
       }
       draw() {
-        const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
-        g.addColorStop(0, "white");
+        const g = this.ctx.createLinearGradient(
+          this.x,
+          this.y,
+          this.x - 30,
+          this.y - 30
+        );
+        g.addColorStop(0, theme === "dark" ? "white" : "black");
         g.addColorStop(1, "transparent");
         this.ctx.fillStyle = g;
         this.ctx.beginPath();
@@ -56,7 +66,8 @@ function About() {
         m.draw();
         if (m.y > canvas.height) meteors.splice(i, 1);
       });
-      if (Math.random() < 0.02) meteors.push(new Meteor(ctx, canvas.width, canvas.height));
+      if (Math.random() < 0.02)
+        meteors.push(new Meteor(ctx, canvas.width, canvas.height));
       raf = requestAnimationFrame(animate);
     };
 
@@ -66,60 +77,62 @@ function About() {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [theme]);
 
   return (
-    <div className="about-container">
+    <div
+      className="about-container"
+      style={{
+        backgroundColor: theme === "dark" ? "black" : "white",
+        color: theme === "dark" ? "white" : "black",
+      }}
+    >
       <canvas ref={canvasRef} className="about-background" />
 
-   <section className="about-section">
-  <h1>👋 Over mij</h1>
-  <p>
-    Hallo, ik ben <span className="highlight">Anass Azdad</span>.  
-    Ik zit in mijn derde jaar Software Development op het Mediacollege Amsterdam.  
-    Ik hou me vooral bezig met <strong>frontend</strong>, omdat ik het tof vind om iets te maken wat er strak uitziet én goed werkt. 
-  </p>
-</section>
+      <section className="about-section">
+        <h1>👋 {t.title}</h1>
+        <p
+          style={{ color: theme === "dark" ? "white" : "black" }}
+          dangerouslySetInnerHTML={{ __html: t.intro }}
+        />
+      </section>
 
-<section className="about-section">
-  <div className="about-image-cta">
-    <div className="about-image">
-    
-    </div>
-    <div>
-      <p>
-        Tijdens school heb ik o.a. gewerkt aan een <strong>kalender/planner</strong>, en thuis heb ik gewerkt aan een <strong>weer-app</strong> en een <strong>currency converter</strong>.  
-        Ik vind het leuk om te spelen met <span className="highlight">API’s</span> en animaties om dingen wat extra leven te geven.  
-      </p>
-      <p>
-        Styling vind ik trouwens ook belangrijk.  
-        We zijn officieel geen designers, maar ik zorg er wel voor dat m’n projecten er netjes en modern uitzien.
-      </p>
-      <a href="/projects" className="cta-button">
-        Bekijk mijn projecten
-      </a>
-    </div>
-  </div>
-</section>
+      <section className="about-section">
+        <div className="about-image-cta">
+          <div className="about-image"></div>
+          <div>
+            <p
+              style={{ color: theme === "dark" ? "white" : "black" }}
+              dangerouslySetInnerHTML={{ __html: t.projects1 }}
+            />
+            <p
+              style={{ color: theme === "dark" ? "white" : "black" }}
+              dangerouslySetInnerHTML={{ __html: t.projects2 }}
+            />
+            <a href="/projects" className="cta-button">
+              {t.cta}
+            </a>
+          </div>
+        </div>
+      </section>
 
-
-
-
-      
       <section className="about-section skills-section">
-        <h2>⚡ Skills</h2>
+        <h2>⚡ {t.skillsTitle}</h2>
         <div className="skills-row">
           {[
-            { name: "React",   },
-            { name: "TypeScript",  },
-            { name: "JavaScript",   },
-            { name: "PHP",   },
-            { name: "CSS",   },
-            { name: "HTML",   },
-            { name: "Git",  },
+            { name: "React", img: "/react.png" },
+            { name: "TypeScript", img: "/typescript.png" },
+            { name: "JavaScript", img: "/javascript.png" },
+            { name: "PHP", img: "/php.png" },
+            { name: "CSS", img: "/css3.svg" },
+            { name: "HTML", img: "/html5.png" },
+            { name: "Git", img: "/git.png" },
           ].map((skill, idx) => (
             <div key={idx} className="skill-icon">
-              <img  alt={skill.name} />
+              <img src={skill.img} alt={skill.name} />
+              <p style={{ color: theme === "dark" ? "white" : "black" }}>
+                {skill.name}
+              </p>
             </div>
           ))}
         </div>

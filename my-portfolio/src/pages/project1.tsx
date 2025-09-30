@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import { useTheme } from "../context/ThemeContext"; // ✅ theme import
 import "./Project1.css";
 
 const daysOfWeek = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
 
 function Project1() {
   const today = new Date();
+  const { theme } = useTheme(); // ✅ theme hook
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [events, setEvents] = useState<{ date: string; title: string }[]>([]);
@@ -16,7 +18,6 @@ function Project1() {
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
 
-  
   const prevMonth = () => {
     if (currentMonth === 0) {
       setCurrentMonth(11);
@@ -35,43 +36,34 @@ function Project1() {
     }
   };
 
-  
   const handleAddEvent = (date: string) => {
     if (newEvent.trim() !== "") {
       const updatedEvents = [...events, { date, title: newEvent }];
       setEvents(updatedEvents);
 
-      
       emailjs
         .send(
-          "service_ammshpk", 
-          "template_5w3hoi1", 
-          {
-            date: date,
-            event: newEvent,
-          },
-          "kBJ0ovQsp0AOVFzz5" 
+          "service_ammshpk",
+          "template_5w3hoi1",
+          { date: date, event: newEvent },
+          "kBJ0ovQsp0AOVFzz5"
         )
-        .then(
-          () => {
-            alert("📧 Email verstuurd!");
-          },
-          (error) => {
-            console.error("EmailJS fout:", error);
-            alert("Kon de email niet versturen.");
-          }
-        );
+        .then(() => {
+          alert("📧 Email verstuurd!");
+        })
+        .catch((error) => {
+          console.error("EmailJS fout:", error);
+          alert("Kon de email niet versturen.");
+        });
 
       setNewEvent("");
     }
   };
 
-  
   const handleDeleteEvent = (date: string, index: number) => {
     setEvents(events.filter((e, i) => !(e.date === date && i === index)));
   };
 
-  
   const toggleDateSelection = (dateString: string) => {
     if (selectedDates.includes(dateString)) {
       setSelectedDates(selectedDates.filter((d) => d !== dateString));
@@ -80,7 +72,6 @@ function Project1() {
     }
   };
 
-  
   const renderDays = () => {
     const days = [];
     for (let i = 0; i < firstDay; i++) {
@@ -96,10 +87,15 @@ function Project1() {
           key={d}
           className={`day ${isSelected ? "selected" : ""}`}
           onClick={() => toggleDateSelection(dateString)}
+          style={{ color: theme === "dark" ? "white" : "black" }} // ✅ tekst switch
         >
           <span>{d}</span>
           {dayEvents.map((e, i) => (
-            <div key={i} className="event">
+            <div
+              key={i}
+              className="event"
+              style={{ color: theme === "dark" ? "white" : "black" }} // ✅ events tekst
+            >
               {e.title}
               <button
                 className="delete-btn"
@@ -118,7 +114,6 @@ function Project1() {
     return days;
   };
 
-  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -158,7 +153,7 @@ function Project1() {
           this.x - 30,
           this.y - 30
         );
-        gradient.addColorStop(0, "white");
+        gradient.addColorStop(0, theme === "dark" ? "white" : "black");
         gradient.addColorStop(1, "transparent");
         this.ctx.fillStyle = gradient;
         this.ctx.beginPath();
@@ -184,16 +179,24 @@ function Project1() {
     animate();
     window.addEventListener("resize", resizeCanvas);
     return () => window.removeEventListener("resize", resizeCanvas);
-  }, []);
+  }, [theme]);
 
   return (
-    <div className="project1-container">
+    <div
+      className="project1-container"
+      style={{
+        backgroundColor: theme === "dark" ? "black" : "white",
+        color: theme === "dark" ? "white" : "black",
+      }}
+    >
       <canvas ref={canvasRef} className="project1-background" />
       <div className="calendar-container">
-        <h1>📅 Kalender & Planner</h1>
+        <h1 style={{ color: theme === "dark" ? "white" : "black" }}>
+          📅 Kalender & Planner
+        </h1>
         <div className="calendar-header">
           <button onClick={prevMonth}>◀</button>
-          <h2>
+          <h2 style={{ color: theme === "dark" ? "white" : "black" }}>
             {new Date(currentYear, currentMonth).toLocaleString("nl-NL", {
               month: "long",
               year: "numeric",
@@ -204,7 +207,11 @@ function Project1() {
 
         <div className="days-header">
           {daysOfWeek.map((day) => (
-            <div key={day} className="day-name">
+            <div
+              key={day}
+              className="day-name"
+              style={{ color: theme === "dark" ? "white" : "black" }}
+            >
               {day}
             </div>
           ))}
@@ -214,7 +221,9 @@ function Project1() {
 
         {selectedDates.length > 0 && (
           <div className="event-form">
-            <h3>Nieuwe afspraak</h3>
+            <h3 style={{ color: theme === "dark" ? "white" : "black" }}>
+              Nieuwe afspraak
+            </h3>
             <input
               type="text"
               value={newEvent}
