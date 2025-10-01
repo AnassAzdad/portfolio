@@ -1,0 +1,38 @@
+/* Standaard: hamburger uit, desktop menu aan */
+.mobile-toggle {
+  display: none;
+  font-size: 1.8rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Mobile nav (verstopt) */
+.mobile-nav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 220px;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 1rem;
+  background: inherit;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  border-bottom-left-radius: 12px;
+}
+
+/* Open state */
+.mobile-nav.open {
+  display: flex;
+}
+
+/* Responsive rules */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-toggle {
+    display: block !important;
+  }
+}
