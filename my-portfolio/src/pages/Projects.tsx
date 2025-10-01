@@ -1,10 +1,14 @@
 import { useEffect, useRef } from "react";
-import { useTheme } from "../context/ThemeContext"; // ✅ theme hook
+import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext"; // ✅ language hook
+import { translations } from "../translations"; // ✅ translations
 import "./Projects.css";
 
 function Projects() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { theme } = useTheme();
+  const { language } = useLanguage();
+  const t = translations[language].projects; // ✅ vertaalde projecten ophalen
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -73,36 +77,12 @@ function Projects() {
     };
   }, [theme]);
 
-  const projects = [
-    {
-      title: "📅 Project 1: Kalender",
-      img: "/project1.png",
-      link: "/project1",
-      description:
-        "Een interactieve kalender waarin je afspraken kan plannen. Inclusief emailnotificaties via EmailJS en een custom UI met React en CSS."
-    },
-    {
-      title: "🌦️ Project 2: Weer App",
-      img: "/project2.png",
-      link: "/project2",
-      description:
-        "Een weer-app die live data ophaalt via de OpenWeatherMap API. Typ een stad in en krijg direct de actuele weersvoorspelling."
-    },
-    {
-      title: "💱 Project 3: Currency Converter",
-      img: "/project3.png",
-      link: "/project3",
-      description:
-        "Een valuta-converter met live wisselkoersen. Gemaakt met de ExchangeRate API en React hooks om bedragen om te rekenen tussen meerdere munteenheden."
-    }
-  ];
-
   return (
     <div
       className="projects-container"
       style={{
         backgroundColor: theme === "dark" ? "black" : "white",
-        color: theme === "dark" ? "white" : "black"
+        color: theme === "dark" ? "white" : "black",
       }}
     >
       <canvas ref={canvasRef} className="projects-background" />
@@ -112,14 +92,14 @@ function Projects() {
           className="projects-title"
           style={{ color: theme === "dark" ? "white" : "black" }}
         >
-          🚀 Projecten
+          🚀 {t.title}
         </h1>
         <p style={{ color: theme === "dark" ? "white" : "black" }}>
-          Hier zijn mijn favoriete projecten. Klik erop om ze in actie te zien.
+          {t.description}
         </p>
 
         <div className="projects-grid">
-          {projects.map((p, idx) => (
+          {t.list.map((p, idx) => (
             <div key={idx}>
               <a href={p.link} className="project-card">
                 <div

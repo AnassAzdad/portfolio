@@ -37,7 +37,7 @@ const Home: React.FC = () => {
     }
   }, [charIndex, roleIndex, language]);
 
-  // Meteor effect (zelfde als je had)
+  // Meteor effect
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -224,7 +224,7 @@ const Home: React.FC = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(4, 1fr)", // ✅ nu 4 projecten naast elkaar
             gap: "3.5rem",
             maxWidth: "1600px",
             width: "100%",
@@ -235,7 +235,7 @@ const Home: React.FC = () => {
           {t.projects.map((project, idx) => (
             <a
               key={idx}
-              href="/projects"
+              href={`/project${idx + 1}`} // ✅ Project4 link werkt nu
               style={{
                 display: "block",
                 position: "relative",
@@ -248,7 +248,7 @@ const Home: React.FC = () => {
             >
               <div
                 style={{
-                  backgroundImage: `url(/project${idx + 1}.png)`,
+                  backgroundImage: `url(/project${idx + 1}.png)`, // ✅ project4.png ook meegepakt
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   width: "100%",
