@@ -7,19 +7,19 @@ Hier presenteer ik mijn projecten, vaardigheden en CV.
 
 ---
 
-## 🚀 Features
-- 🌙 **Dark/Light mode toggle**
-- 🌍 **Tweetalig (Nederlands / Engels)**
-- 🎨 **Custom animaties met Framer Motion**
-- 📩 **Contactformulier via EmailJS**
-- 📂 **Projectpagina’s met eigen apps** (Weather App, Currency Converter, Calendar, …)
-- 📄 **Downloadbaar CV (PDF)**
+##  Features
+-  **Dark/Light mode toggle**
+-  **Tweetalig (Nederlands / Engels)**
+-  **Custom animaties met Framer Motion**
+-  **Contactformulier via EmailJS**
+-  **Projectpagina’s met eigen apps** (Weather App, Currency Converter, Calendar, …)
+-  **Downloadbaar CV (PDF)**
 
 ---
 
 
 
-## 🛠️ Gebruikte technologieën
+##  Gebruikte technologieën
 - **React** (TypeScript, React Router)
 - **Framer Motion** (animaties)
 - **EmailJS** (contactformulier)
