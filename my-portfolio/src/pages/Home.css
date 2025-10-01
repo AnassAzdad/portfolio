@@ -1,0 +1,65 @@
+.home-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.stars-container .star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 2s infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.home-content {
+  position: relative;
+  z-index: 10;
+}
+
+.glow-title {
+  font-size: 4rem;
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
+.home-subtitle {
+  font-size: 1.5rem;
+  color: #ccc;
+  margin-top: 1rem;
+}
+.project-image:hover {
+  filter: blur(0px) brightness(1);
+  transform: scale(1.05);
+}
+
+
+.cta-button {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.75rem 2rem;
+  background-color: #00ffff;
+  color: #000;
+  font-weight: bold;
+  border-radius: 1rem;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cta-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffff;
+}
