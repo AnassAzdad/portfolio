@@ -17,10 +17,7 @@ Hier presenteer ik mijn projecten, vaardigheden en CV.
 
 ---
 
-## 📸 Screenshots
-_Hier kun je een paar screenshots toevoegen (bijv. van de homepage en projecten)._  
 
----
 
 ## 🛠️ Gebruikte technologieën
 - **React** (TypeScript, React Router)
@@ -31,8 +28,7 @@ _Hier kun je een paar screenshots toevoegen (bijv. van de homepage en projecten)
 
 ---
 
-## ⚙️ Installatie & Development
-Wil je de code lokaal draaien?  
+ 
 
 ```bash
 # Repo clonen
