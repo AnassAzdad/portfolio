@@ -31,17 +31,4 @@ Hier presenteer ik mijn projecten, vaardigheden en CV.
  
 
 ```bash
-# Repo clonen
-git clone https://github.com/AnassAzdad/portfolio.git
 
-# Ga naar projectmap
-cd portfolio
-
-# Dependencies installeren
-npm install
-
-# Start development server
-npm start
-
-# Build voor productie
-npm run build
