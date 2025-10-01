@@ -77,8 +77,6 @@
   transform: translateY(-3px);
 }
 
-
-
 .skills-section h2 {
   font-size: 2rem;
   margin-bottom: 2rem;
@@ -138,8 +136,6 @@
   100% { transform: translateY(0px); }
 }
 
-
-
 .avatar-placeholder {
   width: 180px;
   height: 180px;
@@ -153,4 +149,71 @@
   color: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   margin-bottom: 1.5rem;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 1024px) {
+  .about-section h1 {
+    font-size: 2.8rem;
+  }
+  .about-section p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-container {
+    padding: 4rem 1.5rem;
+    gap: 3rem;
+  }
+
+  .about-section h1 {
+    font-size: 2.2rem;
+  }
+
+  .about-section p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .about-image img {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-container {
+    padding: 3rem 1rem;
+    gap: 2rem;
+  }
+
+  .about-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .about-section p {
+    font-size: 0.9rem;
+  }
+
+  .about-image img {
+    width: 130px;
+    height: 130px;
+  }
+
+  .cta-button {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .skill-icon img {
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+  }
+
+  .skill-icon p {
+    font-size: 0.75rem;
+  }
 }

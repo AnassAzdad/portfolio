@@ -9,6 +9,7 @@
   align-items: center;
   flex-direction: column;
   text-align: center;
+  padding: 1rem; /* ruimte voor kleine schermen */
 }
 
 .stars-container .star {
@@ -28,12 +29,15 @@
 .home-content {
   position: relative;
   z-index: 10;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .glow-title {
   font-size: 4rem;
   color: #00ffff;
   text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
+  line-height: 1.2;
 }
 
 .home-subtitle {
@@ -41,11 +45,11 @@
   color: #ccc;
   margin-top: 1rem;
 }
+
 .project-image:hover {
   filter: blur(0px) brightness(1);
   transform: scale(1.05);
 }
-
 
 .cta-button {
   display: inline-block;
@@ -62,4 +66,41 @@
 .cta-button:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px #00ffff;
+}
+
+/* 📱 Responsive voor tablets en telefoons */
+@media (max-width: 1024px) {
+  .glow-title {
+    font-size: 3rem;
+  }
+  .home-subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .glow-title {
+    font-size: 2.2rem;
+  }
+  .home-subtitle {
+    font-size: 1rem;
+  }
+  .cta-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glow-title {
+    font-size: 1.8rem;
+  }
+  .home-subtitle {
+    font-size: 0.9rem;
+  }
+  .cta-button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.5rem;
+  }
 }

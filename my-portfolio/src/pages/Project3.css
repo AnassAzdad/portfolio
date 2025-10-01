@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 1rem;
 }
 
 .project3-background {
@@ -24,7 +25,7 @@
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.55);
   max-width: 720px;
-  width: 92%;
+  width: 100%;
   text-align: center;
 }
 
@@ -119,4 +120,44 @@
   margin-top: 0.8rem;
   color: #ff5d5d;
   font-weight: 600;
+}
+
+/* 📱 Responsive breakpoints */
+@media (max-width: 768px) {
+  .converter-row {
+    grid-template-columns: 1fr; /* Zet alle velden onder elkaar */
+  }
+
+  .swap {
+    margin: 0.5rem auto;
+    transform: none;
+  }
+
+  .line {
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .converter-box {
+    padding: 1.25rem;
+  }
+
+  .field input,
+  .field select {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .swap {
+    height: 38px;
+    width: 38px;
+    font-size: 1rem;
+  }
+
+  .line {
+    font-size: 1rem;
+  }
 }

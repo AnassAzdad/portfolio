@@ -3,11 +3,12 @@
   min-height: 100vh;
   width: 100%;
   overflow: hidden;
-  background: black; 
+  background: black;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
+  padding: 1rem;
 }
 
 .project2-background {
@@ -22,7 +23,7 @@
   position: relative;
   z-index: 1;
   max-width: 520px;
-  width: 90%;
+  width: 100%;
   padding: 2rem;
   background: rgba(30, 30, 30, 0.9);
   border-radius: 16px;
@@ -93,4 +94,54 @@
   color: #ff6b6b;
   margin-top: 0.75rem;
   font-weight: 600;
+}
+
+/* 📱 Responsive breakpoints */
+@media (max-width: 768px) {
+  .weather-box {
+    padding: 1.5rem;
+  }
+
+  .search-box {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .search-box input {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .search-box button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.9rem;
+  }
+
+  .temp {
+    font-size: 2.2rem;
+  }
+
+  .desc {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .weather-box {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .weather-card {
+    padding: 1rem;
+  }
+
+  .temp {
+    font-size: 1.8rem;
+  }
+
+  .desc {
+    font-size: 0.95rem;
+  }
 }
