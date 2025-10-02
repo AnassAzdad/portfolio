@@ -178,6 +178,7 @@ const Home: React.FC = () => {
             gap: "1rem",
             justifyContent: "center",
             marginBottom: "3rem",
+            flexWrap: "wrap",
           }}
         >
           <a
@@ -223,10 +224,11 @@ const Home: React.FC = () => {
 
         {/* Project grid responsive */}
         <div
+          className="home-projects-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "2rem",
+            gridTemplateColumns: "repeat(4, 1fr)", // desktop blijft 4
+            gap: "3rem",
             maxWidth: "1200px",
             width: "100%",
             margin: "0 auto",
@@ -272,6 +274,7 @@ const Home: React.FC = () => {
                   fontSize: "1.6rem",
                   fontWeight: 700,
                   textAlign: "center",
+                  padding: "0.5rem",
                 }}
               >
                 {project.title} <br /> {project.subtitle}
@@ -280,6 +283,24 @@ const Home: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* 📱 extra CSS alleen voor mobiel */}
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .home-projects-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 1rem !important;
+            }
+            .home-projects-grid a {
+              height: 180px !important;
+            }
+            .home-projects-grid div {
+              font-size: 1rem !important;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };
