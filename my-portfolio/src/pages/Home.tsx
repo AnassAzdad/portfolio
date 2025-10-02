@@ -131,7 +131,7 @@ const Home: React.FC = () => {
         style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }}
       />
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "1400px" }}>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: "1600px", width: "100%" }}>
         <h1
           style={{
             fontSize: "4rem",
@@ -143,8 +143,7 @@ const Home: React.FC = () => {
           <span
             style={{
               color: "#a259ff",
-              textShadow:
-                "0 0 5px #a259ff, 0 0 10px #a259ff, 0 0 20px #a259ff",
+              textShadow: "0 0 5px #a259ff, 0 0 10px #a259ff, 0 0 20px #a259ff",
             }}
           >
             Anass
@@ -178,7 +177,6 @@ const Home: React.FC = () => {
             gap: "1rem",
             justifyContent: "center",
             marginBottom: "3rem",
-            flexWrap: "wrap",
           }}
         >
           <a
@@ -223,60 +221,20 @@ const Home: React.FC = () => {
         </div>
 
         {/* Project grid responsive */}
-        <div
-          className="home-projects-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)", // desktop blijft 4
-            gap: "3rem",
-            maxWidth: "1200px",
-            width: "100%",
-            margin: "0 auto",
-            marginBottom: "4rem",
-          }}
-        >
+        <div className="home-projects-grid">
           {t.projects.map((project, idx) => (
             <a
               key={idx}
               href="/projects" // altijd naar /projects
-              style={{
-                display: "block",
-                position: "relative",
-                borderRadius: "12px",
-                overflow: "hidden",
-                height: "250px",
-                cursor: "pointer",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
-              }}
+              className="home-project-card"
             >
               <div
+                className="home-project-image"
                 style={{
                   backgroundImage: `url(/project${idx + 1}.png)`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  width: "100%",
-                  height: "100%",
-                  filter: "blur(1.2px) brightness(0.7)",
-                  transition: "all 0.3s ease",
                 }}
               />
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#fff",
-                  fontSize: "1.6rem",
-                  fontWeight: 700,
-                  textAlign: "center",
-                  padding: "0.5rem",
-                }}
-              >
+              <div className="home-project-overlay">
                 {project.title} <br /> {project.subtitle}
               </div>
             </a>
@@ -284,19 +242,67 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* 📱 extra CSS alleen voor mobiel */}
       <style>
         {`
+          .home-projects-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* PC breed */
+            gap: 3.5rem;
+            width: 100%;
+            margin: 0 auto 4rem auto;
+          }
+          .home-project-card {
+            display: block;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 250px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+          }
+          .home-project-image {
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100%;
+            filter: blur(1.2px) brightness(0.7);
+            transition: all 0.3s ease;
+          }
+          .home-project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-align: center;
+          }
+
+          /* Tablet */
+          @media (max-width: 1024px) {
+            .home-projects-grid {
+              grid-template-columns: repeat(3, 1fr);
+              gap: 2rem;
+            }
+          }
+
+          /* Mobiel */
           @media (max-width: 768px) {
             .home-projects-grid {
-              grid-template-columns: repeat(2, 1fr) !important;
-              gap: 1rem !important;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 1.5rem;
             }
-            .home-projects-grid a {
-              height: 180px !important;
+            .home-project-card {
+              height: 180px;
             }
-            .home-projects-grid div {
-              font-size: 1rem !important;
+            .home-project-overlay {
+              font-size: 1rem;
+              padding: 0.5rem;
             }
           }
         `}
