@@ -221,12 +221,13 @@ const Home: React.FC = () => {
           </a>
         </div>
 
+        {/* Project grid responsive */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "3.5rem",
-            maxWidth: "1600px",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "2rem",
+            maxWidth: "1200px",
             width: "100%",
             margin: "0 auto",
             marginBottom: "4rem",
@@ -235,7 +236,7 @@ const Home: React.FC = () => {
           {t.projects.map((project, idx) => (
             <a
               key={idx}
-              href="/projects" // 👈 altijd naar /projects
+              href="/projects" // altijd naar /projects
               style={{
                 display: "block",
                 position: "relative",
