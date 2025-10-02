@@ -68,6 +68,58 @@
   box-shadow: 0 0 15px #00ffff;
 }
 
+/* ✅ Project previews styling */
+.project-card {
+  display: block;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 300px;
+  cursor: pointer;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-image {
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  filter: blur(1.5px) brightness(0.65);
+  transition: filter 0.3s ease;
+}
+
+.project-card:hover .project-image {
+  filter: blur(1px) brightness(0.8);
+}
+
+.project-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 1rem;
+}
+
+.project-description {
+  margin-top: 0.8rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ccc;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 /* 📱 Responsive voor tablets en telefoons */
 @media (max-width: 1024px) {
   .glow-title {
@@ -90,6 +142,19 @@
     padding: 0.75rem;
     font-size: 1rem;
   }
+
+  /* Project previews kleiner en overzichtelijker */
+  .project-card {
+    height: 220px;
+  }
+  .project-overlay {
+    font-size: 1.2rem;
+    padding: 0.6rem;
+  }
+  .project-description {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -102,5 +167,16 @@
   .cta-button {
     font-size: 0.9rem;
     padding: 0.6rem 1.5rem;
+  }
+
+  /* Project previews nog compacter */
+  .project-card {
+    height: 180px;
+  }
+  .project-overlay {
+    font-size: 1rem;
+  }
+  .project-description {
+    font-size: 0.85rem;
   }
 }

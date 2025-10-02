@@ -224,7 +224,7 @@ const Home: React.FC = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)", // ✅ nu 4 projecten naast elkaar
+            gridTemplateColumns: "repeat(4, 1fr)",
             gap: "3.5rem",
             maxWidth: "1600px",
             width: "100%",
@@ -235,7 +235,7 @@ const Home: React.FC = () => {
           {t.projects.map((project, idx) => (
             <a
               key={idx}
-              href={`/project${idx + 1}`} // ✅ Project4 link werkt nu
+              href="/projects" // 👈 altijd naar /projects
               style={{
                 display: "block",
                 position: "relative",
@@ -248,7 +248,7 @@ const Home: React.FC = () => {
             >
               <div
                 style={{
-                  backgroundImage: `url(/project${idx + 1}.png)`, // ✅ project4.png ook meegepakt
+                  backgroundImage: `url(/project${idx + 1}.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   width: "100%",

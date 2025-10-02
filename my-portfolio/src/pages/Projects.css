@@ -35,9 +35,10 @@
 }
 
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* desktop standaard 3 */
+  display: flex;
+  flex-direction: column; /* alles onder elkaar */
   gap: 3rem;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -48,6 +49,7 @@
   border-radius: 16px;
   overflow: hidden;
   height: 350px;
+  width: 100%;
   cursor: pointer;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -108,11 +110,6 @@
 
 /* 📱 Responsive breakpoints */
 @media (max-width: 1024px) {
-  .projects-grid {
-    grid-template-columns: repeat(2, 1fr); /* tablet = 2 kolommen */
-    gap: 2rem;
-  }
-
   .projects-title {
     font-size: 2.5rem;
   }
@@ -123,17 +120,12 @@
 }
 
 @media (max-width: 600px) {
-  .projects-grid {
-    grid-template-columns: 1fr; /* mobiel = 1 kolom */
-    gap: 1.5rem;
-  }
-
   .projects-title {
     font-size: 2rem;
   }
 
   .project-card {
-    height: 250px; /* kleinere cards op mobiel */
+    height: 250px; /* cards kleiner op mobiel */
   }
 
   .project-overlay {
