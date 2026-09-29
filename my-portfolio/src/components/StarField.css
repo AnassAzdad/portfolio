@@ -1,0 +1,22 @@
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.starfield canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* Zachte nevel rechtsboven, geeft diepte zonder een verloop-hero te worden */
+.starfield-glow {
+  position: absolute;
+  top: -20vh;
+  right: -15vw;
+  width: 70vw;
+  height: 70vh;
+  background: radial-gradient(closest-side, var(--accent-soft), transparent);
+  filter: blur(20px);
+}

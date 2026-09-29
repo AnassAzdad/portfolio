@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "../context/ThemeContext"; // ✅ theme hook
+import { useEffect, useState } from "react";
+import { FiRepeat } from "../components/icons";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
+import ProjectShell from "../components/ProjectShell";
 import "./Project3.css";
 
-const FALLBACK_SYMBOLS = ["EUR", "USD", "MAD", "GBP", "JPY", "CAD"];
+const FALLBACK_SYMBOLS = ["EUR", "USD", "GBP", "JPY", "CAD"];
 
 function parseAmount(input: string): number {
   if (input == null) return NaN;
@@ -12,6 +15,9 @@ function parseAmount(input: string): number {
 }
 
 function Project3() {
+  const { language } = useLanguage();
+  const t = translations[language].project3;
+
   const [amountStr, setAmountStr] = useState<string>("100");
   const [fromCurrency, setFromCurrency] = useState<string>("EUR");
   const [toCurrency, setToCurrency] = useState<string>("USD");
@@ -20,12 +26,9 @@ function Project3() {
   const [result, setResult] = useState<number | null>(null);
   const [rate, setRate] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<"" | "noResult" | "failed">("");
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { theme } = useTheme(); // ✅ theme hook
-
-  // 🔹 Haal currency lijst op
+  // Haal currency lijst op
   useEffect(() => {
     (async () => {
       try {
@@ -38,7 +41,7 @@ function Project3() {
     })();
   }, []);
 
-  // 🔹 Converteer bedrag
+  // Converteer bedrag
   useEffect(() => {
     const amt = parseAmount(amountStr);
     if (!Number.isFinite(amt) || amt <= 0) {
@@ -55,14 +58,16 @@ function Project3() {
       return;
     }
 
+    let cancelled = false;
     (async () => {
       setLoading(true);
       setError("");
       try {
         const url = `https://api.frankfurter.app/latest?amount=${amt}&from=${fromCurrency}&to=${toCurrency}`;
         const res = await fetch(url);
-        if (!res.ok) throw new Error("Kon koersen niet ophalen.");
+        if (!res.ok) throw new Error("fetch");
         const data = await res.json();
+        if (cancelled) return;
 
         const toAmount = data?.rates?.[toCurrency];
         if (toAmount !== undefined) {
@@ -71,16 +76,20 @@ function Project3() {
         } else {
           setResult(null);
           setRate(null);
-          setError("Geen resultaat voor dit valutapaar.");
+          setError("noResult");
         }
-      } catch (e: any) {
+      } catch {
+        if (cancelled) return;
         setResult(null);
         setRate(null);
-        setError(e?.message || "Er ging iets mis.");
+        setError("failed");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
+    return () => {
+      cancelled = true;
+    };
   }, [amountStr, fromCurrency, toCurrency]);
 
   const swapCurrencies = () => {
@@ -88,113 +97,34 @@ function Project3() {
     setToCurrency(fromCurrency);
   };
 
-  // 🎇 Meteor achtergrond
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-
-    class Meteor {
-      x: number;
-      y: number;
-      size: number;
-      speed: number;
-      ctx: CanvasRenderingContext2D;
-      constructor(c: CanvasRenderingContext2D, w: number, h: number) {
-        this.ctx = c;
-        this.x = Math.random() * w;
-        this.y = -10;
-        this.size = Math.random() * 3 + 2;
-        this.speed = Math.random() * 4 + 3;
-      }
-      update() {
-        this.x += this.speed;
-        this.y += this.speed;
-      }
-      draw() {
-        const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
-        g.addColorStop(0, theme === "dark" ? "white" : "black"); // ✅ theme afhankelijk
-        g.addColorStop(1, "transparent");
-        this.ctx.fillStyle = g;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        this.ctx.fill();
-      }
-    }
-
-    let meteors: Meteor[] = [];
-    let raf = 0;
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      meteors.forEach((m, i) => {
-        m.update();
-        m.draw();
-        if (m.y > canvas.height) meteors.splice(i, 1);
-      });
-      if (Math.random() < 0.02) meteors.push(new Meteor(ctx, canvas.width, canvas.height));
-      raf = requestAnimationFrame(animate);
-    };
-
-    animate();
-    window.addEventListener("resize", resizeCanvas);
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      cancelAnimationFrame(raf);
-    };
-  }, [theme]);
-
   const amount = parseAmount(amountStr) || 0;
+  const fmt = (n: number, digits = 2) =>
+    n.toLocaleString(language === "nl" ? "nl-NL" : "en-GB", { maximumFractionDigits: digits });
 
   return (
-    <div
-      className="project3-container"
-      style={{
-        backgroundColor: theme === "dark" ? "black" : "white",
-        color: theme === "dark" ? "white" : "black",
-      }}
-    >
-      <canvas ref={canvasRef} className="project3-background" />
-      <div
-        className="converter-box"
-        style={{
-          background: theme === "dark" ? "#1e1e1e" : "#f2f2f2",
-          color: theme === "dark" ? "white" : "black",
-        }}
-      >
-        <h1 style={{ color: theme === "dark" ? "white" : "black" }}>💱 Currency Converter</h1>
-
+    <ProjectShell slug="project3">
+      <div className="converter">
         <div className="converter-row">
           <div className="field">
-            <label>Bedrag</label>
+            <label htmlFor="fx-amount">{t.amount}</label>
             <input
+              id="fx-amount"
+              className="input"
               type="text"
               inputMode="decimal"
               placeholder="0.00"
               value={amountStr}
               onChange={(e) => setAmountStr(e.target.value)}
-              style={{
-                background: theme === "dark" ? "#222" : "#fff",
-                color: theme === "dark" ? "white" : "black",
-              }}
             />
           </div>
 
           <div className="field">
-            <label>Van</label>
+            <label htmlFor="fx-from">{t.from}</label>
             <select
+              id="fx-from"
+              className="input"
               value={fromCurrency}
               onChange={(e) => setFromCurrency(e.target.value)}
-              style={{
-                background: theme === "dark" ? "#222" : "#fff",
-                color: theme === "dark" ? "white" : "black",
-              }}
             >
               {symbols.map((c) => (
                 <option key={c} value={c}>
@@ -205,26 +135,22 @@ function Project3() {
           </div>
 
           <button
-            className="swap"
+            type="button"
+            className="icon-btn swap-btn"
             onClick={swapCurrencies}
-            title="Wissel"
-            style={{
-              background: theme === "dark" ? "#a259ff" : "#6b3dcb",
-              color: "white",
-            }}
+            aria-label={t.swap}
+            title={t.swap}
           >
-            ↔︎
+            <FiRepeat />
           </button>
 
           <div className="field">
-            <label>Naar</label>
+            <label htmlFor="fx-to">{t.to}</label>
             <select
+              id="fx-to"
+              className="input"
               value={toCurrency}
               onChange={(e) => setToCurrency(e.target.value)}
-              style={{
-                background: theme === "dark" ? "#222" : "#fff",
-                color: theme === "dark" ? "white" : "black",
-              }}
             >
               {symbols.map((c) => (
                 <option key={c} value={c}>
@@ -235,39 +161,27 @@ function Project3() {
           </div>
         </div>
 
-        {loading && <p className="muted">Koersen laden…</p>}
-        {error && <p className="error">{error}</p>}
-
-        <div
-          className="result-card"
-          style={{
-            background: theme === "dark" ? "#2d2d2d" : "#e9e9e9",
-            color: theme === "dark" ? "white" : "black",
-          }}
-        >
-          <div className="line">
-            <span>
-              {amount.toLocaleString(undefined, { maximumFractionDigits: 2 })} {fromCurrency}
-            </span>
-            <span className="arrow">=</span>
-            <span className="highlight">
-              {result !== null
-                ? result.toLocaleString(undefined, { maximumFractionDigits: 2 })
-                : "0"}{" "}
-              {toCurrency}
-            </span>
+        <div className="fx-result" aria-live="polite">
+          <p className="fx-from">
+            {fmt(amount)} {fromCurrency} =
+          </p>
+          <p className="fx-to">
+            {result !== null ? fmt(result) : "—"} <span>{toCurrency}</span>
+          </p>
+          <div className="fx-meta">
+            {rate !== null && (
+              <span>
+                {t.rate}: 1 {fromCurrency} = {fmt(rate, 6)} {toCurrency}
+              </span>
+            )}
+            <span>{t.source}</span>
           </div>
-
-          {rate !== null && (
-            <div className="rate">
-              1 {fromCurrency} ={" "}
-              <strong>{rate.toLocaleString(undefined, { maximumFractionDigits: 6 })}</strong>{" "}
-              {toCurrency}
-            </div>
-          )}
         </div>
+
+        {loading && <p className="status">{t.loading}</p>}
+        {error && <p className="status is-bad">{t[error]}</p>}
       </div>
-    </div>
+    </ProjectShell>
   );
 }
 

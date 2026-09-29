@@ -9,17 +9,20 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function initialTheme(): Theme {
+  // index.html zet data-theme al vóór React start
+  const attr = document.documentElement.getAttribute("data-theme");
+  return attr === "light" ? "light" : "dark";
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as Theme | null;
-    if (saved) setTheme(saved);
-  }, []);
-
-  useEffect(() => {
-    document.body.className = theme;
-    localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
   }, [theme]);
 
   const toggleTheme = () => {
