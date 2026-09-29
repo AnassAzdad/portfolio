@@ -1,19 +1,25 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import emailjs from "@emailjs/browser";
-import { useTheme } from "../context/ThemeContext"; // ✅ theme import
+import { FiChevronLeft, FiChevronRight, FiX } from "../components/icons";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
+import ProjectShell from "../components/ProjectShell";
 import "./Project1.css";
 
-const daysOfWeek = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+type CalendarEvent = { id: number; date: string; title: string };
 
 function Project1() {
   const today = new Date();
-  const { theme } = useTheme(); // ✅ theme hook
+  const todayString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  const { language } = useLanguage();
+  const t = translations[language].project1;
+
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [events, setEvents] = useState<{ date: string; title: string }[]>([]);
-  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [newEvent, setNewEvent] = useState("");
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [status, setStatus] = useState<{ ok: boolean; text: string } | null>(null);
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
@@ -36,207 +42,138 @@ function Project1() {
     }
   };
 
-  const handleAddEvent = (date: string) => {
-    if (newEvent.trim() !== "") {
-      const updatedEvents = [...events, { date, title: newEvent }];
-      setEvents(updatedEvents);
+  const handleAddEvent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedDate || newEvent.trim() === "") return;
+    const title = newEvent.trim();
+    setEvents((prev) => [...prev, { id: Date.now(), date: selectedDate, title }]);
+    setNewEvent("");
 
-      emailjs
-        .send(
-          "service_ammshpk",
-          "template_5w3hoi1",
-          { date: date, event: newEvent },
-          "kBJ0ovQsp0AOVFzz5"
-        )
-        .then(() => {
-          alert("📧 Email verstuurd!");
-        })
-        .catch((error) => {
-          console.error("EmailJS fout:", error);
-          alert("Kon de email niet versturen.");
-        });
-
-      setNewEvent("");
-    }
-  };
-
-  const handleDeleteEvent = (date: string, index: number) => {
-    setEvents(events.filter((e, i) => !(e.date === date && i === index)));
-  };
-
-  const toggleDateSelection = (dateString: string) => {
-    if (selectedDates.includes(dateString)) {
-      setSelectedDates(selectedDates.filter((d) => d !== dateString));
-    } else {
-      setSelectedDates([...selectedDates, dateString]);
-    }
-  };
-
-  const renderDays = () => {
-    const days = [];
-    for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="day empty"></div>);
-    }
-    for (let d = 1; d <= daysInMonth; d++) {
-      const dateString = `${currentYear}-${currentMonth + 1}-${d}`;
-      const dayEvents = events.filter((e) => e.date === dateString);
-      const isSelected = selectedDates.includes(dateString);
-
-      days.push(
-        <div
-          key={d}
-          className={`day ${isSelected ? "selected" : ""}`}
-          onClick={() => toggleDateSelection(dateString)}
-          style={{ color: theme === "dark" ? "white" : "black" }} // ✅ tekst switch
-        >
-          <span>{d}</span>
-          {dayEvents.map((e, i) => (
-            <div
-              key={i}
-              className="event"
-              style={{ color: theme === "dark" ? "white" : "black" }} // ✅ events tekst
-            >
-              {e.title}
-              <button
-                className="delete-btn"
-                onClick={(ev) => {
-                  ev.stopPropagation();
-                  handleDeleteEvent(dateString, i);
-                }}
-              >
-                ❌
-              </button>
-            </div>
-          ))}
-        </div>
-      );
-    }
-    return days;
-  };
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-
-    class Meteor {
-      x: number;
-      y: number;
-      size: number;
-      speed: number;
-      ctx: CanvasRenderingContext2D;
-
-      constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        this.ctx = ctx;
-        this.x = Math.random() * width;
-        this.y = -10;
-        this.size = Math.random() * 3 + 2;
-        this.speed = Math.random() * 4 + 3;
-      }
-
-      update() {
-        this.x += this.speed;
-        this.y += this.speed;
-      }
-
-      draw() {
-        const gradient = this.ctx.createLinearGradient(
-          this.x,
-          this.y,
-          this.x - 30,
-          this.y - 30
-        );
-        gradient.addColorStop(0, theme === "dark" ? "white" : "black");
-        gradient.addColorStop(1, "transparent");
-        this.ctx.fillStyle = gradient;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        this.ctx.fill();
-      }
-    }
-
-    let meteors: Meteor[] = [];
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      meteors.forEach((meteor, index) => {
-        meteor.update();
-        meteor.draw();
-        if (meteor.y > canvas.height) meteors.splice(index, 1);
+    emailjs
+      .send("service_ammshpk", "template_5w3hoi1", { date: selectedDate, event: title }, "kBJ0ovQsp0AOVFzz5")
+      .then(() => setStatus({ ok: true, text: t.mailed }))
+      .catch((error) => {
+        console.error("EmailJS fout:", error);
+        setStatus({ ok: false, text: t.mailFailed });
       });
-      if (Math.random() < 0.02)
-        meteors.push(new Meteor(ctx, canvas.width, canvas.height));
-      requestAnimationFrame(animate);
-    };
+  };
 
-    animate();
-    window.addEventListener("resize", resizeCanvas);
-    return () => window.removeEventListener("resize", resizeCanvas);
-  }, [theme]);
+  const handleDeleteEvent = (id: number) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const formatDate = (dateString: string) => {
+    const [y, m, d] = dateString.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString(t.locale, {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
+  };
+
+  const cells = [];
+  for (let i = 0; i < firstDay; i++) {
+    cells.push(<div key={`empty-${i}`} className="cal-day is-empty" />);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateString = `${currentYear}-${currentMonth + 1}-${d}`;
+    const dayEvents = events.filter((e) => e.date === dateString);
+    const classes = [
+      "cal-day",
+      selectedDate === dateString ? "is-selected" : "",
+      todayString === dateString ? "is-today" : "",
+    ].join(" ");
+
+    cells.push(
+      <div
+        key={d}
+        className={classes}
+        role="button"
+        tabIndex={0}
+        aria-pressed={selectedDate === dateString}
+        onClick={() => setSelectedDate(selectedDate === dateString ? null : dateString)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setSelectedDate(selectedDate === dateString ? null : dateString);
+          }
+        }}
+      >
+        <span className="cal-num">{d}</span>
+        {dayEvents.map((ev) => (
+          <div key={ev.id} className="cal-event">
+            <span>{ev.title}</span>
+            <button
+              type="button"
+              aria-label={`${t.remove}: ${ev.title}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteEvent(ev.id);
+              }}
+            >
+              <FiX />
+            </button>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div
-      className="project1-container"
-      style={{
-        backgroundColor: theme === "dark" ? "black" : "white",
-        color: theme === "dark" ? "white" : "black",
-      }}
-    >
-      <canvas ref={canvasRef} className="project1-background" />
-      <div className="calendar-container">
-        <h1 style={{ color: theme === "dark" ? "white" : "black" }}>
-          📅 Kalender & Planner
-        </h1>
-        <div className="calendar-header">
-          <button onClick={prevMonth}>◀</button>
-          <h2 style={{ color: theme === "dark" ? "white" : "black" }}>
-            {new Date(currentYear, currentMonth).toLocaleString("nl-NL", {
+    <ProjectShell slug="project1">
+      <div className="calendar">
+        <div className="cal-header">
+          <h2>
+            {new Date(currentYear, currentMonth).toLocaleString(t.locale, {
               month: "long",
               year: "numeric",
             })}
           </h2>
-          <button onClick={nextMonth}>▶</button>
-        </div>
-
-        <div className="days-header">
-          {daysOfWeek.map((day) => (
-            <div
-              key={day}
-              className="day-name"
-              style={{ color: theme === "dark" ? "white" : "black" }}
-            >
-              {day}
-            </div>
-          ))}
-        </div>
-
-        <div className="days-grid">{renderDays()}</div>
-
-        {selectedDates.length > 0 && (
-          <div className="event-form">
-            <h3 style={{ color: theme === "dark" ? "white" : "black" }}>
-              Nieuwe afspraak
-            </h3>
-            <input
-              type="text"
-              value={newEvent}
-              onChange={(e) => setNewEvent(e.target.value)}
-              placeholder="Titel van afspraak..."
-            />
-            <button onClick={() => handleAddEvent(selectedDates[0])}>
-              Toevoegen & Mailen
+          <div className="cal-nav">
+            <button type="button" className="icon-btn" onClick={prevMonth} aria-label={t.prev}>
+              <FiChevronLeft />
+            </button>
+            <button type="button" className="icon-btn" onClick={nextMonth} aria-label={t.next}>
+              <FiChevronRight />
             </button>
           </div>
+        </div>
+
+        <div className="cal-scroll">
+          <div className="cal-grid cal-weekdays">
+            {t.days.map((day) => (
+              <div key={day}>{day}</div>
+            ))}
+          </div>
+          <div className="cal-grid">{cells}</div>
+        </div>
+
+        {selectedDate ? (
+          <form className="cal-form" onSubmit={handleAddEvent}>
+            <div className="field">
+              <label htmlFor="cal-title">
+                {t.newEvent} {t.on} {formatDate(selectedDate)}
+              </label>
+              <input
+                id="cal-title"
+                className="input"
+                type="text"
+                value={newEvent}
+                onChange={(e) => setNewEvent(e.target.value)}
+                placeholder={t.placeholder}
+                autoFocus
+              />
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={!newEvent.trim()}>
+              {t.add}
+            </button>
+          </form>
+        ) : (
+          <p className="status">{t.hint}</p>
         )}
+        {status && <p className={`status ${status.ok ? "is-ok" : "is-bad"}`}>{status.text}</p>}
       </div>
-    </div>
+    </ProjectShell>
   );
 }
 

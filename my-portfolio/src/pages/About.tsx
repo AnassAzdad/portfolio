@@ -1,141 +1,88 @@
-import { useEffect, useRef } from "react";
-import "./About.css";
+import { Link } from "react-router-dom";
+import { FiArrowRight, FiDownload } from "../components/icons";
 import { useLanguage } from "../context/LanguageContext";
-import { translations } from "../translations";
-import { useTheme } from "../context/ThemeContext";
+import { skills, translations } from "../translations";
+import "./About.css";
 
 function About() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { language } = useLanguage();
-  const { theme } = useTheme();
   const t = translations[language].about;
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-
-    class Meteor {
-      x: number;
-      y: number;
-      size: number;
-      speed: number;
-      ctx: CanvasRenderingContext2D;
-      constructor(c: CanvasRenderingContext2D, w: number, h: number) {
-        this.ctx = c;
-        this.x = Math.random() * w;
-        this.y = -10;
-        this.size = Math.random() * 3 + 2;
-        this.speed = Math.random() * 4 + 3;
-      }
-      update() {
-        this.x += this.speed;
-        this.y += this.speed;
-      }
-      draw() {
-        const g = this.ctx.createLinearGradient(
-          this.x,
-          this.y,
-          this.x - 30,
-          this.y - 30
-        );
-        g.addColorStop(0, theme === "dark" ? "white" : "black");
-        g.addColorStop(1, "transparent");
-        this.ctx.fillStyle = g;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        this.ctx.fill();
-      }
-    }
-
-    let meteors: Meteor[] = [];
-    let raf = 0;
-
-    const animate = () => {
-      if (!canvas || !ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      meteors.forEach((m, i) => {
-        m.update();
-        m.draw();
-        if (m.y > canvas.height) meteors.splice(i, 1);
-      });
-      if (Math.random() < 0.02)
-        meteors.push(new Meteor(ctx, canvas.width, canvas.height));
-      raf = requestAnimationFrame(animate);
-    };
-
-    animate();
-    window.addEventListener("resize", resizeCanvas);
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      cancelAnimationFrame(raf);
-    };
-  }, [theme]);
-
   return (
-    <div
-      className="about-container"
-      style={{
-        backgroundColor: theme === "dark" ? "black" : "white",
-        color: theme === "dark" ? "white" : "black",
-      }}
-    >
-      <canvas ref={canvasRef} className="about-background" />
-
-      <section className="about-section">
-        <h1>👋 {t.title}</h1>
-        <p
-          style={{ color: theme === "dark" ? "white" : "black" }}
-          dangerouslySetInnerHTML={{ __html: t.intro }}
-        />
-      </section>
-
-      <section className="about-section">
-        <div className="about-image-cta">
-          <div className="about-image"></div>
-          <div>
-            <p
-              style={{ color: theme === "dark" ? "white" : "black" }}
-              dangerouslySetInnerHTML={{ __html: t.projects1 }}
-            />
-            <p
-              style={{ color: theme === "dark" ? "white" : "black" }}
-              dangerouslySetInnerHTML={{ __html: t.projects2 }}
-            />
-            <a href="/projects" className="cta-button">
-              {t.cta}
+    <div className="page">
+      <section className="container about-hero">
+        <div className="about-hero-copy">
+          <span className="eyebrow rise">{t.eyebrow}</span>
+          <h1 className="page-title rise rise-2">{t.title}</h1>
+          <div className="prose rise rise-3">
+            {t.intro.map((p, i) => (
+              <p key={i} className={i === 0 ? "lead-first" : undefined}>
+                {p}
+              </p>
+            ))}
+          </div>
+          <div className="hero-actions rise rise-4">
+            <Link to="/projects" className="btn btn-primary">
+              {t.cta} <FiArrowRight aria-hidden="true" />
+            </Link>
+            <a href="/CV_Anass_Azdad.pdf" download className="btn">
+              <FiDownload aria-hidden="true" /> {t.cv}
             </a>
           </div>
         </div>
+        <div className="monogram rise rise-3" aria-hidden="true">
+          <span>AA</span>
+          <svg viewBox="0 0 200 200" className="orbit">
+            <circle cx="100" cy="100" r="92" fill="none" />
+            <circle cx="100" cy="8" r="4" className="orbit-dot" />
+          </svg>
+        </div>
       </section>
 
-      <section className="about-section skills-section">
-        <h2>⚡ {t.skillsTitle}</h2>
-        <div className="skills-row">
-          {[
-            { name: "React", img: "/react.png" },
-            { name: "TypeScript", img: "/typescript.png" },
-            { name: "JavaScript", img: "/javascript.png" },
-            { name: "PHP", img: "/php.png" },
-            { name: "CSS", img: "/css3.svg" },
-            { name: "HTML", img: "/html5.png" },
-            { name: "Git", img: "/git.png" },
-          ].map((skill, idx) => (
-            <div key={idx} className="skill-icon">
-              <img src={skill.img} alt={skill.name} />
-              <p style={{ color: theme === "dark" ? "white" : "black" }}>
-                {skill.name}
-              </p>
-            </div>
+      <section className="container about-split">
+        <div className="section-head">
+          <span className="eyebrow">{t.workTitle}</span>
+          <h2>{t.workTitle}</h2>
+        </div>
+        <div className="prose">
+          {t.work.map((p, i) => (
+            <p key={i}>{p}</p>
           ))}
         </div>
+      </section>
+
+      <section className="container about-split">
+        <div className="section-head">
+          <span className="eyebrow">{t.timelineTitle}</span>
+          <h2>{t.timelineTitle}</h2>
+        </div>
+        <ol className="timeline">
+          {t.timeline.map((item) => (
+            <li key={item.title}>
+              <span className="timeline-period">{item.period}</span>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.place}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="container">
+        <div className="section-head">
+          <span className="eyebrow">{t.skillsTitle}</span>
+          <h2>{t.skillsTitle}</h2>
+          <p>{t.skillsIntro}</p>
+        </div>
+        <ul className="skills-grid">
+          {skills.map((s) => (
+            <li key={s.name} className="skill">
+              <img src={s.img} alt="" />
+              <span>{s.name}</span>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );

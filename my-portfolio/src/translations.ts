@@ -1,3 +1,19 @@
+export type ProjectInfo = {
+  slug: string;
+  title: string;
+  kicker: string;
+  img: string;
+  description: string;
+  stack: string[];
+};
+
+const stacks = {
+  project1: ["React", "TypeScript", "EmailJS"],
+  project2: ["React", "TypeScript", "OpenWeatherMap API"],
+  project3: ["React", "TypeScript", "Frankfurter API"],
+  project4: ["React", "TypeScript", "i18n"],
+};
+
 export const translations = {
   nl: {
     nav: {
@@ -5,83 +21,173 @@ export const translations = {
       about: "Over mij",
       projects: "Projecten",
       contact: "Contact",
+      menu: "Menu",
+      toggleTheme: "Wissel licht/donker",
+      toggleLanguage: "Switch to English",
     },
     home: {
-      greeting: "Hallo, ik ben",
+      status: "Beschikbaar voor stage",
+      greeting: "Hoi, ik ben",
+      roles: ["frontend developer", "Software Developer in opleiding", "React & TypeScript"],
       tagline:
-        "Ik bouw graag mooie, interactieve webapplicaties met moderne technologieën.",
+        "Ik bouw interactieve webapps die er strak uitzien en goed werken. Derdejaars Software Development aan het Mediacollege Amsterdam.",
       moreAboutMe: "Meer over mij",
-      viewProjects: "Bekijk mijn projecten",
-      projects: [
-        { title: "Project 1: Kalender", subtitle: "Klik om te bekijken" },
-        { title: "Project 2: Weer App", subtitle: "Klik om te bekijken" },
-        { title: "Project 3: Currency Converter", subtitle: "Klik om te bekijken" },
-        { title: "Project 4: Quiz App", subtitle: "Klik om te bekijken" },
+      viewProjects: "Bekijk projecten",
+      facts: [
+        { label: "Opleiding", value: "Mediacollege Amsterdam" },
+        { label: "Jaar", value: "3e jaar Software Dev" },
+        { label: "Focus", value: "Frontend" },
       ],
-      roles: ["Software Developer in opleiding", "Frontend Developer"],
+      localTime: "Lokale tijd",
+      selectedTitle: "Geselecteerd werk",
+      selectedIntro: "Vier apps die je hier meteen kunt uitproberen.",
+      allProjects: "Alle projecten",
+      stackTitle: "Waar ik mee werk",
+      ctaTitle: "Iets samen bouwen?",
+      ctaText: "Ik zoek een stageplek waar ik aan echte producten kan werken. Stuur me gerust een bericht.",
+      ctaButton: "Neem contact op",
     },
     about: {
-      title: "Over mij",
-      intro: `Hallo, ik ben <span class="highlight">Anass Azdad</span>.  
-              Ik zit in mijn derde jaar Software Development op het Mediacollege Amsterdam.  
-              Ik hou me vooral bezig met <strong>frontend</strong>, omdat ik het tof vind om iets te maken wat er strak uitziet én goed werkt.`,
-      projects1: `Tijdens school heb ik o.a. gewerkt aan een <strong>kalender/planner</strong>, en thuis heb ik gewerkt aan een <strong>weer-app</strong> en een <strong>currency converter</strong>.  
-                  Ik vind het leuk om te spelen met <span class="highlight">API’s</span> en animaties om dingen wat extra leven te geven.`,
-      projects2: `Styling vind ik trouwens ook belangrijk.  
-                  We zijn officieel geen designers, maar ik zorg er wel voor dat m’n projecten er netjes en modern uitzien.`,
-      cta: "Bekijk mijn projecten",
+      eyebrow: "Over mij",
+      title: "Frontend met oog voor detail",
+      intro: [
+        "Ik ben Anass Azdad en zit in mijn derde jaar Software Development aan het Mediacollege Amsterdam.",
+        "Ik richt me vooral op frontend. Ik vind het tof om iets te maken dat er strak uitziet én goed werkt: van de eerste schets tot de laatste hover-state.",
+      ],
+      workTitle: "Wat ik bouw",
+      work: [
+        "Op school werkte ik onder andere aan een kalender en planner. Thuis bouwde ik een weer-app, een valuta-converter en een quiz.",
+        "Ik speel graag met API's en animaties om projecten wat extra leven te geven. Styling vind ik net zo belangrijk als de code: ik ben geen designer, maar ik zorg dat het er netjes en modern uitziet.",
+      ],
+      timelineTitle: "Tijdlijn",
+      timeline: [
+        { period: "Nu", title: "3e jaar Software Development", place: "Mediacollege Amsterdam" },
+        { period: "2025", title: "Weer-app, valuta-converter en quiz", place: "Eigen projecten" },
+        { period: "School", title: "Kalender & planner met e-mailmeldingen", place: "Schoolproject" },
+      ],
       skillsTitle: "Skills",
+      skillsIntro: "De talen en tools die ik dagelijks gebruik.",
+      cta: "Bekijk mijn projecten",
+      cv: "Download cv (PDF)",
     },
     projects: {
-      title: "Projecten",
-      description: "Hier zijn mijn favoriete projecten. Klik erop om ze in actie te zien.",
+      eyebrow: "Projecten",
+      title: "Dingen die ik gebouwd heb",
+      description: "Elk project draait live op deze site. Klik erop om het uit te proberen.",
+      open: "Open app",
+      back: "Alle projecten",
       list: [
         {
-          title: "📅 Project 1: Kalender",
+          slug: "project1",
+          title: "Kalender & Planner",
+          kicker: "Schoolproject",
           img: "/project1.png",
-          link: "/project1",
           description:
-            "Een interactieve kalender waarin je afspraken kan plannen. Inclusief emailnotificaties via EmailJS en een custom UI met React en CSS."
+            "Een interactieve kalender waarin je afspraken plant. Bij elke nieuwe afspraak gaat er een e-mail uit via EmailJS.",
+          stack: stacks.project1,
         },
         {
-          title: "🌦️ Project 2: Weer App",
+          slug: "project2",
+          title: "Weer-app",
+          kicker: "Live data",
           img: "/project2.png",
-          link: "/project2",
           description:
-            "Een weer-app die live data ophaalt via de OpenWeatherMap API. Typ een stad in en krijg direct de actuele weersvoorspelling."
+            "Typ een stad, waar ook ter wereld, en zie direct het actuele weer. Haalt live data op via de OpenWeatherMap API.",
+          stack: stacks.project2,
         },
         {
-          title: "💱 Project 3: Currency Converter",
+          slug: "project3",
+          title: "Valuta-converter",
+          kicker: "Live koersen",
           img: "/project3.png",
-          link: "/project3",
           description:
-            "Een valuta-converter met live wisselkoersen. Gemaakt met de ExchangeRate API en React hooks om bedragen om te rekenen tussen meerdere munteenheden."
+            "Reken bedragen om tussen meer dan dertig valuta met actuele wisselkoersen van de Frankfurter API.",
+          stack: stacks.project3,
         },
         {
-          title: "📝 Project 4: Quiz App",
+          slug: "project4",
+          title: "Quiz-app",
+          kicker: "Interactief",
           img: "/project4.png",
-          link: "/project4",
           description:
-            "Een interactieve quiz-app waarmee je kennis kan testen. Gebouwd met React en dynamische vraagcomponenten."
-        }
-      ]
+            "Een korte quiz over React en TypeScript met directe feedback per antwoord en een score aan het eind.",
+          stack: stacks.project4,
+        },
+      ] as ProjectInfo[],
     },
     contact: {
-      title: "Contact",
-      description: "Neem contact met me op via het formulier.",
+      eyebrow: "Contact",
+      title: "Laten we praten",
+      description:
+        "Vragen over een project, een stageplek of gewoon een idee? Stuur een bericht via het formulier en ik reageer zo snel mogelijk.",
+      name: "Naam",
+      email: "E-mail",
+      message: "Bericht",
+      namePh: "Je naam",
+      emailPh: "jij@voorbeeld.nl",
+      messagePh: "Waar kan ik je mee helpen?",
+      send: "Verstuur bericht",
+      sending: "Versturen…",
+      sent: "Bericht verzonden. Bedankt!",
+      failed: "Versturen lukte niet. Probeer het later opnieuw.",
+      cvTitle: "Liever mijn cv?",
+      cvText: "Een overzicht van mijn opleiding, skills en projecten.",
+      cv: "Download cv (PDF)",
+      elsewhere: "Ook te vinden op",
+      location: "Amsterdam, NL",
+    },
+    project1: {
+      month: "Maand",
+      prev: "Vorige maand",
+      next: "Volgende maand",
+      days: ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"],
+      hint: "Klik op een dag om een afspraak toe te voegen.",
+      newEvent: "Nieuwe afspraak",
+      on: "op",
+      placeholder: "Titel van de afspraak…",
+      add: "Toevoegen & mailen",
+      remove: "Verwijder",
+      mailed: "Afspraak toegevoegd en e-mail verstuurd.",
+      mailFailed: "Afspraak toegevoegd, maar de e-mail kon niet worden verstuurd.",
+      locale: "nl-NL",
+    },
+    project2: {
+      label: "Stad",
+      placeholder: "Bijv. Amsterdam, Parijs, Tokio…",
+      search: "Zoek",
+      loading: "Weer ophalen…",
+      notFound: "Stad niet gevonden. Controleer de spelling.",
+      failed: "Het weer kon niet worden opgehaald. Probeer het opnieuw.",
+      feels: "Voelt als",
+      humidity: "Luchtvochtigheid",
+      wind: "Wind",
+      empty: "Zoek een stad om het actuele weer te zien.",
+      lang: "nl",
+    },
+    project3: {
+      amount: "Bedrag",
+      from: "Van",
+      to: "Naar",
+      swap: "Wissel valuta",
+      loading: "Koersen laden…",
+      noResult: "Geen resultaat voor dit valutapaar.",
+      failed: "Kon de koersen niet ophalen.",
+      rate: "Koers",
+      source: "Bron: Frankfurter API (ECB)",
     },
     project4: {
       title: "Quiz",
-      next: "Volgende ➡️",
+      next: "Volgende vraag",
+      finish: "Bekijk resultaat",
       progress: "Vraag {current} van {total}",
       score: "Score",
       finished: "Klaar!",
       result: "Je score",
-      retry: "Opnieuw spelen 🔄",
+      retry: "Opnieuw spelen",
       questions: [
         {
           question: "Wat is React?",
-          options: ["Backend framework", "Frontend library", "Database systeem", "CSS preprocessor"],
+          options: ["Backend framework", "Frontend library", "Databasesysteem", "CSS preprocessor"],
           answer: 1,
         },
         {
@@ -93,95 +199,189 @@ export const translations = {
           question: "Wat doet TypeScript?",
           options: [
             "Voegt types toe aan JavaScript",
-            "Is een CSS framework",
-            "Database management",
+            "Het is een CSS framework",
+            "Databasebeheer",
             "Server hosting",
           ],
           answer: 0,
         },
       ],
     },
+    footer: {
+      built: "Gebouwd met React en TypeScript",
+      top: "Terug naar boven",
+    },
   },
 
   en: {
     nav: {
       home: "Home",
-      about: "About me",
+      about: "About",
       projects: "Projects",
       contact: "Contact",
+      menu: "Menu",
+      toggleTheme: "Toggle light/dark",
+      toggleLanguage: "Schakel naar Nederlands",
     },
     home: {
-      greeting: "Hello, I'm",
+      status: "Open to internships",
+      greeting: "Hi, I'm",
+      roles: ["frontend developer", "Software Developer in training", "React & TypeScript"],
       tagline:
-        "I love building beautiful, interactive web applications with modern technologies.",
+        "I build interactive web apps that look sharp and work well. Third-year Software Development student at Mediacollege Amsterdam.",
       moreAboutMe: "More about me",
-      viewProjects: "View my projects",
-      projects: [
-        { title: "Project 1: Calendar", subtitle: "Click to view" },
-        { title: "Project 2: Weather App", subtitle: "Click to view" },
-        { title: "Project 3: Currency Converter", subtitle: "Click to view" },
-        { title: "Project 4: Quiz App", subtitle: "Click to view" },
+      viewProjects: "View projects",
+      facts: [
+        { label: "School", value: "Mediacollege Amsterdam" },
+        { label: "Year", value: "3rd year Software Dev" },
+        { label: "Focus", value: "Frontend" },
       ],
-      roles: ["Software Developer in training", "Frontend Developer"],
+      localTime: "Local time",
+      selectedTitle: "Selected work",
+      selectedIntro: "Four apps you can try right here.",
+      allProjects: "All projects",
+      stackTitle: "What I work with",
+      ctaTitle: "Want to build something?",
+      ctaText: "I'm looking for an internship where I can work on real products. Feel free to send me a message.",
+      ctaButton: "Get in touch",
     },
     about: {
-      title: "About me",
-      intro: `Hi, I'm <span class="highlight">Anass Azdad</span>.  
-              I'm in my third year of Software Development at Mediacollege Amsterdam.  
-              I mainly focus on <strong>frontend</strong>, because I enjoy creating things that look sleek and work well.`,
-      projects1: `At school I worked on a <strong>calendar/planner</strong>, and at home I made a <strong>weather app</strong> and a <strong>currency converter</strong>.  
-                  I like experimenting with <span class="highlight">APIs</span> and animations to bring projects to life.`,
-      projects2: `I also care about styling.  
-                  We’re not officially designers, but I make sure my projects look clean and modern.`,
-      cta: "View my projects",
+      eyebrow: "About",
+      title: "Frontend with an eye for detail",
+      intro: [
+        "I'm Anass Azdad, a third-year Software Development student at Mediacollege Amsterdam.",
+        "I mostly focus on frontend. I enjoy making things that look sharp and work well, from the first sketch to the last hover state.",
+      ],
+      workTitle: "What I build",
+      work: [
+        "At school I worked on a calendar and planner, among other things. At home I built a weather app, a currency converter and a quiz.",
+        "I like experimenting with APIs and animations to bring projects to life. Styling matters as much to me as the code: I'm not a designer, but I make sure my work looks clean and modern.",
+      ],
+      timelineTitle: "Timeline",
+      timeline: [
+        { period: "Now", title: "3rd year Software Development", place: "Mediacollege Amsterdam" },
+        { period: "2025", title: "Weather app, currency converter and quiz", place: "Personal projects" },
+        { period: "School", title: "Calendar & planner with email alerts", place: "School project" },
+      ],
       skillsTitle: "Skills",
+      skillsIntro: "The languages and tools I use every day.",
+      cta: "View my projects",
+      cv: "Download CV (PDF)",
     },
     projects: {
-      title: "Projects",
-      description: "Here are my favorite projects. Click to see them in action.",
+      eyebrow: "Projects",
+      title: "Things I've built",
+      description: "Every project runs live on this site. Click one to try it.",
+      open: "Open app",
+      back: "All projects",
       list: [
         {
-          title: "📅 Project 1: Calendar",
+          slug: "project1",
+          title: "Calendar & Planner",
+          kicker: "School project",
           img: "/project1.png",
-          link: "/project1",
           description:
-            "An interactive calendar where you can schedule appointments. Includes email notifications via EmailJS and a custom UI built with React and CSS."
+            "An interactive calendar for planning appointments. Every new appointment sends an email through EmailJS.",
+          stack: stacks.project1,
         },
         {
-          title: "🌦️ Project 2: Weather App",
+          slug: "project2",
+          title: "Weather App",
+          kicker: "Live data",
           img: "/project2.png",
-          link: "/project2",
           description:
-            "A weather app that fetches live data from the OpenWeatherMap API. Type in a city and instantly get the current forecast."
+            "Type any city in the world and see the current weather instantly. Pulls live data from the OpenWeatherMap API.",
+          stack: stacks.project2,
         },
         {
-          title: "💱 Project 3: Currency Converter",
+          slug: "project3",
+          title: "Currency Converter",
+          kicker: "Live rates",
           img: "/project3.png",
-          link: "/project3",
           description:
-            "A currency converter with live exchange rates. Built using the ExchangeRate API and React hooks to calculate amounts between multiple currencies."
+            "Convert amounts between more than thirty currencies using up-to-date rates from the Frankfurter API.",
+          stack: stacks.project3,
         },
         {
-          title: "📝 Project 4: Quiz App",
+          slug: "project4",
+          title: "Quiz App",
+          kicker: "Interactive",
           img: "/project4.png",
-          link: "/project4",
           description:
-            "An interactive quiz app to test your knowledge. Built with React and dynamic question components."
-        }
-      ]
+            "A short quiz about React and TypeScript with instant feedback on every answer and a score at the end.",
+          stack: stacks.project4,
+        },
+      ] as ProjectInfo[],
     },
     contact: {
-      title: "Contact",
-      description: "Get in touch with me via the form.",
+      eyebrow: "Contact",
+      title: "Let's talk",
+      description:
+        "Questions about a project, an internship or just an idea? Send a message through the form and I'll reply as soon as I can.",
+      name: "Name",
+      email: "Email",
+      message: "Message",
+      namePh: "Your name",
+      emailPh: "you@example.com",
+      messagePh: "How can I help?",
+      send: "Send message",
+      sending: "Sending…",
+      sent: "Message sent. Thank you!",
+      failed: "Sending failed. Please try again later.",
+      cvTitle: "Prefer my CV?",
+      cvText: "An overview of my education, skills and projects.",
+      cv: "Download CV (PDF)",
+      elsewhere: "Also on",
+      location: "Amsterdam, NL",
+    },
+    project1: {
+      month: "Month",
+      prev: "Previous month",
+      next: "Next month",
+      days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      hint: "Click a day to add an appointment.",
+      newEvent: "New appointment",
+      on: "on",
+      placeholder: "Appointment title…",
+      add: "Add & email",
+      remove: "Remove",
+      mailed: "Appointment added and email sent.",
+      mailFailed: "Appointment added, but the email could not be sent.",
+      locale: "en-GB",
+    },
+    project2: {
+      label: "City",
+      placeholder: "E.g. Amsterdam, Paris, Tokyo…",
+      search: "Search",
+      loading: "Fetching weather…",
+      notFound: "City not found. Check the spelling.",
+      failed: "Couldn't fetch the weather. Please try again.",
+      feels: "Feels like",
+      humidity: "Humidity",
+      wind: "Wind",
+      empty: "Search for a city to see the current weather.",
+      lang: "en",
+    },
+    project3: {
+      amount: "Amount",
+      from: "From",
+      to: "To",
+      swap: "Swap currencies",
+      loading: "Loading rates…",
+      noResult: "No result for this currency pair.",
+      failed: "Couldn't load exchange rates.",
+      rate: "Rate",
+      source: "Source: Frankfurter API (ECB)",
     },
     project4: {
       title: "Quiz",
-      next: "Next ➡️",
+      next: "Next question",
+      finish: "See result",
       progress: "Question {current} of {total}",
       score: "Score",
       finished: "Done!",
       result: "Your score",
-      retry: "Play again 🔄",
+      retry: "Play again",
       questions: [
         {
           question: "What is React?",
@@ -197,7 +397,7 @@ export const translations = {
           question: "What does TypeScript do?",
           options: [
             "Adds types to JavaScript",
-            "Is a CSS framework",
+            "It's a CSS framework",
             "Database management",
             "Server hosting",
           ],
@@ -205,5 +405,21 @@ export const translations = {
         },
       ],
     },
+    footer: {
+      built: "Built with React and TypeScript",
+      top: "Back to top",
+    },
   },
-} as const;
+};
+
+export const skills = [
+  { name: "React", img: "/react.png" },
+  { name: "TypeScript", img: "/typescript.png" },
+  { name: "JavaScript", img: "/javascript.png" },
+  { name: "HTML", img: "/html5.png" },
+  { name: "CSS", img: "/css3.svg" },
+  { name: "PHP", img: "/php.png" },
+  { name: "Git", img: "/git.png" },
+];
+
+export const GITHUB_URL = "https://github.com/AnassAzdad";

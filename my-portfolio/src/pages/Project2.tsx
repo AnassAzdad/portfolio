@@ -1,5 +1,8 @@
-import { useState, useEffect, useRef } from "react";
-import { useTheme } from "../context/ThemeContext"; // ✅ theme hook toevoegen
+import { useState } from "react";
+import { FiSearch } from "../components/icons";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
+import ProjectShell from "../components/ProjectShell";
 import "./Project2.css";
 
 type GeoResult = {
@@ -10,18 +13,29 @@ type GeoResult = {
   state?: string;
 };
 
+type Weather = {
+  temp: number;
+  feels: number;
+  humidity: number;
+  wind: number;
+  desc: string;
+  icon: string;
+};
+
+const API_KEY = "0402f893d9e221b875a0033de355b8b4";
+
 function Project2() {
+  const { language } = useLanguage();
+  const t = translations[language].project2;
+
   const [city, setCity] = useState("");
   const [place, setPlace] = useState<{ name: string; country: string; state?: string } | null>(null);
-  const [weather, setWeather] = useState<{ temp: number; desc: string; icon: string } | null>(null);
+  const [weather, setWeather] = useState<Weather | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const { theme } = useTheme(); // ✅ theme hook
-  const API_KEY = "0402f893d9e221b875a0033de355b8b4"; 
-
-  const handleSearch = async () => {
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!city.trim()) return;
     setLoading(true);
     setError("");
@@ -36,8 +50,7 @@ function Project2() {
       const geoData: GeoResult[] = await geoRes.json();
 
       if (!geoData || geoData.length === 0) {
-        setError("❌ Stad niet gevonden. Controleer spelling.");
-        setLoading(false);
+        setError(t.notFound);
         return;
       }
 
@@ -45,160 +58,88 @@ function Project2() {
       setPlace({ name, country, state });
 
       const wxRes = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=nl`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=${t.lang}`
       );
       if (!wxRes.ok) throw new Error("Weerdata fout");
       const wx = await wxRes.json();
 
       setWeather({
         temp: wx.main?.temp,
-        desc: wx.weather?.[0]?.description ?? "onbekend",
+        feels: wx.main?.feels_like,
+        humidity: wx.main?.humidity,
+        wind: wx.wind?.speed,
+        desc: wx.weather?.[0]?.description ?? "",
         icon: wx.weather?.[0]?.icon ?? "01d",
       });
     } catch (err) {
       console.error(err);
-      setError("❌ Er ging iets mis bij het ophalen van het weer.");
+      setError(t.failed);
     } finally {
       setLoading(false);
     }
   };
 
-  // 🎇 Meteor achtergrond
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-
-    class Meteor {
-      x: number;
-      y: number;
-      size: number;
-      speed: number;
-      ctx: CanvasRenderingContext2D;
-
-      constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        this.ctx = ctx;
-        this.x = Math.random() * width;
-        this.y = -10;
-        this.size = Math.random() * 3 + 2;
-        this.speed = Math.random() * 4 + 3;
-      }
-      update() {
-        this.x += this.speed;
-        this.y += this.speed;
-      }
-      draw() {
-        const g = this.ctx.createLinearGradient(this.x, this.y, this.x - 30, this.y - 30);
-        g.addColorStop(0, theme === "dark" ? "white" : "black"); // ✅ afhankelijk van theme
-        g.addColorStop(1, "transparent");
-        this.ctx.fillStyle = g;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        this.ctx.fill();
-      }
-    }
-
-    let meteors: Meteor[] = [];
-    let rafId = 0;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      meteors.forEach((m, i) => {
-        m.update();
-        m.draw();
-        if (m.y > canvas.height) meteors.splice(i, 1);
-      });
-      if (Math.random() < 0.02) meteors.push(new Meteor(ctx, canvas.width, canvas.height));
-      rafId = requestAnimationFrame(animate);
-    };
-
-    animate();
-    window.addEventListener("resize", resizeCanvas);
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", resizeCanvas);
-    };
-  }, [theme]);
-
   return (
-    <div
-      className="project2-container"
-      style={{
-        background: theme === "dark" ? "black" : "white",
-        color: theme === "dark" ? "white" : "black",
-      }}
-    >
-      <canvas ref={canvasRef} className="project2-background" />
-
-      <div
-        className="weather-box"
-        style={{
-          background: theme === "dark" ? "rgba(30,30,30,0.9)" : "rgba(240,240,240,0.9)",
-          color: theme === "dark" ? "white" : "black",
-        }}
-      >
-        <h1 style={{ color: theme === "dark" ? "white" : "black" }}>🌤️ Weather App</h1>
-        <p style={{ color: theme === "dark" ? "white" : "black" }}>
-          Typ een stad (wereldwijd) en check het weer.
-        </p>
-
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Bijv. Amsterdam, Paris, Tokyo..."
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            style={{
-              background: theme === "dark" ? "#222" : "#f0f0f0",
-              color: theme === "dark" ? "white" : "black",
-            }}
-          />
-          <button
-            onClick={handleSearch}
-            style={{
-              background: theme === "dark" ? "#a259ff" : "#6b3dcb",
-              color: "white",
-            }}
-          >
-            Zoek
-          </button>
-        </div>
-
-        {loading && <p>⏳ Laden...</p>}
-        {error && <p className="error">{error}</p>}
-
-        {place && weather && (
-          <div
-            className="weather-card"
-            style={{
-              background: theme === "dark" ? "#2d2d2d" : "#f5f5f5",
-              color: theme === "dark" ? "white" : "black",
-            }}
-          >
-            <h2>
-              {place.name}
-              {place.state ? `, ${place.state}` : ""} ({place.country})
-            </h2>
-            <img
-              src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-              alt={weather.desc}
+    <ProjectShell slug="project2">
+      <div className="weather">
+        <form className="weather-search" onSubmit={handleSearch}>
+          <div className="field">
+            <label htmlFor="weather-city">{t.label}</label>
+            <input
+              id="weather-city"
+              className="input"
+              type="text"
+              placeholder={t.placeholder}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
-            <p className="temp" style={{ color: theme === "dark" ? "#00ffea" : "#333" }}>
-              {Math.round(weather.temp)}°C
-            </p>
-            <p className="desc">{weather.desc}</p>
           </div>
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            <FiSearch aria-hidden="true" /> {t.search}
+          </button>
+        </form>
+
+        {loading && <p className="status">{t.loading}</p>}
+        {error && <p className="status is-bad">{error}</p>}
+
+        {place && weather ? (
+          <div className="weather-result">
+            <div className="weather-main">
+              <div>
+                <p className="weather-place">
+                  {place.name}
+                  {place.state ? `, ${place.state}` : ""} · {place.country}
+                </p>
+                <p className="weather-temp">{Math.round(weather.temp)}°</p>
+                <p className="weather-desc">{weather.desc}</p>
+              </div>
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.icon}@4x.png`}
+                alt={weather.desc}
+                width={128}
+                height={128}
+              />
+            </div>
+            <dl className="weather-stats">
+              <div>
+                <dt>{t.feels}</dt>
+                <dd>{Math.round(weather.feels)}°C</dd>
+              </div>
+              <div>
+                <dt>{t.humidity}</dt>
+                <dd>{weather.humidity}%</dd>
+              </div>
+              <div>
+                <dt>{t.wind}</dt>
+                <dd>{Math.round(weather.wind * 3.6)} km/h</dd>
+              </div>
+            </dl>
+          </div>
+        ) : (
+          !loading && !error && <p className="weather-empty">{t.empty}</p>
         )}
       </div>
-    </div>
+    </ProjectShell>
   );
 }
 
